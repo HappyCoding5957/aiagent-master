@@ -1,0 +1,432 @@
+{
+  "name": "工作流3: 智慧運維助手 - RAG 增強型系統查詢 API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ops-copilot",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook 觸發器",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        368,
+        512
+      ],
+      "webhookId": "ops-copilot-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "srIqK5dAro7ENfyk",
+          "name": "ChatBot_RAG_API_Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "user_question",
+              "name": "user_question",
+              "value": "={{ $json.body.question }}",
+              "type": "string"
+            },
+            {
+              "id": "unit",
+              "name": "unit",
+              "value": "={{ $json.body.unit || 'SYSTEM' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-input",
+      "name": "提取輸入",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const question = $json.user_question.toLowerCase();\n\nlet intent = 'general';\nlet needs_ansible = false;\nlet needs_rag = false;\n\nif (question.includes('ansible')) {\n  intent = 'ansible_query';\n  needs_ansible = true;\n}\nelse if (question.includes('套件') || question.includes('package') || question.includes('軟體') || question.includes('版本')) {\n  intent = 'ansible_query';\n  needs_ansible = true;\n}\nelse if (question.includes('文檔') || question.includes('document') || question.includes('檢索') || question.includes('search')) {\n  intent = 'rag_search';\n  needs_rag = true;\n}\nelse {\n  intent = 'hybrid';\n  needs_ansible = true;\n  needs_rag = true;\n}\n\nreturn {\n  json: {\n    user_question: $json.user_question,\n    unit: $json.unit,\n    intent: intent,\n    needs_ansible: needs_ansible,\n    needs_rag: needs_rag\n  }\n};"
+      },
+      "id": "analyze-intent",
+      "name": "分析意圖",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT hostname, ip, package_name, version FROM ansible.os_packages_info ORDER BY collect_time DESC LIMIT 20",
+        "options": {}
+      },
+      "id": "query-ansible",
+      "name": "查詢 Ansible DB",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        912,
+        400
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "sX8duSxfxo9Rtpq2",
+          "name": "Ansible"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://10.100.40.5:8004/api/pdf/semantic_query",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "Ennostar_N8N_2025_SecureKey_7f3d9a"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"query\": $json.user_question, \"unit\": $json.unit } }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "query-rag",
+      "name": "查詢 RAG 知識庫",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        912,
+        608
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "merge-node",
+      "name": "合併結果",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const extractNode = $('提取輸入');\nconst intentNode = $('分析意圖');\nconst ansibleNode = $('查詢 Ansible DB');\nconst ragNode = $('查詢 RAG 知識庫');\n\nif (!extractNode || !extractNode.first()) {\n  throw new Error('無法取得「提取輸入」節點資料');\n}\n\nconst question = extractNode.first().json.user_question;\nconst unit = extractNode.first().json.unit;\nconst intent = intentNode && intentNode.first() ? intentNode.first().json.intent : 'unknown';\n\nconst ansibleItems = ansibleNode ? ansibleNode.all() : [];\nlet ansible = { success: true, results: [], count: 0 };\n\nfor (const item of ansibleItems) {\n  if (item.json && item.json.hostname) {\n    ansible.results.push({\n      id: item.json.id || '',\n      hostname: item.json.hostname,\n      ip: item.json.ip,\n      package_name: item.json.package_name,\n      version: item.json.version\n    });\n  }\n}\nansible.count = ansible.results.length;\n\nconst ragItems = ragNode ? ragNode.all() : [];\nlet rag = { success: true, results: [], count: 0 };\n\nfor (const item of ragItems) {\n  if (item.json && Array.isArray(item.json)) {\n    for (const d of item.json) {\n      if (d.id && d.name && d.text) {\n        rag.results.push({\n          id: d.id,\n          name: d.name,\n          text: d.text,\n          page_hash: d.page_hash || '',\n          xywh: d.xywh || '',\n          score: d.score || 0\n        });\n      }\n    }\n  }\n}\nrag.count = rag.results.length;\n\nconst ansibleContext = ansible.count > 0 \n  ? `## Ansible 系統資料\\n${ansible.results.slice(0, 10).map(r => `- 主機: ${r.hostname} (${r.ip}), 套件: ${r.package_name}, 版本: ${r.version}`).join('\\n')}`\n  : '';\n\nconst ragContext = rag.count > 0\n  ? `## RAG 知識庫文檔\\n${rag.results.slice(0, 3).map(r => `- ${r.name}: ${r.text}`).join('\\n')}`\n  : '';\n\nconst systemPrompt = '你是一個專業的智慧運維助手，擅長回答 Ansible 系統管理和技術文檔相關問題。請根據提供的參考資料，用繁體中文簡潔準確地回答用戶問題。';\nconst userContent = `問題：${question}\\n\\n參考資料：\\n${ansibleContext}\\n${ragContext}`;\n\nreturn {\n  json: {\n    question: question,\n    unit: unit,\n    intent: intent,\n    ansible: ansible,\n    rag: rag,\n    system_prompt: systemPrompt,\n    user_content: userContent\n  }\n};"
+      },
+      "id": "merge-results",
+      "name": "整合結果",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://en-openai01.openai.azure.com/openai/deployments/gpt-5-chat/chat/completions?api-version=2024-12-01-preview",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-key",
+              "value": "1xPk95hy7EROtFp4yytQD6jrb237tGuewf0vGuMWExcbAr1TSgjUJQQJ99BFACHYHv6XJ3w3AAABACOGdXkj"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"messages\": [{\"role\": \"system\", \"content\": $json.system_prompt}, {\"role\": \"user\", \"content\": $json.user_content}], \"temperature\": 0.0 } }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "call-llm",
+      "name": "呼叫 LLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 直接從前一個節點的輸出中取得資料\nconst llmResponse = $input.item.json;\nconst mergeNode = $('整合結果');\n\nif (!mergeNode || !mergeNode.first()) {\n  return {\n    json: {\n      error: '無法取得整合結果',\n      text: '系統錯誤，請稍後再試',\n      answer: '系統錯誤，請稍後再試',\n      citations: []\n    }\n  };\n}\n\nconst mergedData = mergeNode.first().json;\nconst answer = llmResponse.choices && llmResponse.choices[0] && llmResponse.choices[0].message \n  ? llmResponse.choices[0].message.content \n  : '無法生成回答';\n\nreturn {\n  json: {\n    text: answer,\n    answer: answer,\n    citations: mergedData.rag.results || [],\n    meta: {\n      question: mergedData.question,\n      intent: mergedData.intent,\n      unit: mergedData.unit,\n      ansible_count: mergedData.ansible.count,\n      rag_count: mergedData.rag.count\n    }\n  }\n};"
+      },
+      "id": "format-response",
+      "name": "格式化回應",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "content": "輸入層\n接收POST請求\n提取問題與單位欄位設定預設值",
+        "height": 240,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        352,
+        432
+      ],
+      "id": "917b9b2b-8de6-4a53-9a60-85cc09a29ea8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "查詢層\n查詢主機套件版本最新n筆資料\n向量檢索相關技術文檔",
+        "height": 448,
+        "width": 230,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        848,
+        320
+      ],
+      "id": "6b16dc8b-c5ed-4a88-9df7-6dffcd7b250d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "輸出層\n整理成 JSON 包含答案與引用來源\n返回 JSON 結果給呼叫端結束請求",
+        "height": 240,
+        "width": 342,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        432
+      ],
+      "id": "6f0db59d-8385-4007-b52d-cb410daeff41",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "生成層\n Azure GPT-5 根據資料生成答案",
+        "height": 240,
+        "width": 150,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        432
+      ],
+      "id": "908cdcbb-167c-4bb5-8c21-67d7ebd72089",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "處理層\n按位置合併系統與文檔資料\n組織成 AI 提示詞包含參考資料",
+        "height": 240,
+        "width": 310,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        432
+      ],
+      "id": "c872f898-bfa1-48cf-8a36-1c1abc2ea0aa",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "路由層\n根據關鍵字判斷查詢套件或文檔",
+        "height": 240,
+        "width": 176,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        656,
+        432
+      ],
+      "id": "fb2a0b40-0b6e-4540-9444-7aaf5045dbd5",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "提取輸入": {
+      "main": [
+        [
+          {
+            "node": "分析意圖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook 觸發器": {
+      "main": [
+        [
+          {
+            "node": "提取輸入",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "分析意圖": {
+      "main": [
+        [
+          {
+            "node": "查詢 Ansible DB",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "查詢 RAG 知識庫",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "查詢 Ansible DB": {
+      "main": [
+        [
+          {
+            "node": "合併結果",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "查詢 RAG 知識庫": {
+      "main": [
+        [
+          {
+            "node": "合併結果",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "合併結果": {
+      "main": [
+        [
+          {
+            "node": "整合結果",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "整合結果": {
+      "main": [
+        [
+          {
+            "node": "呼叫 LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "呼叫 LLM": {
+      "main": [
+        [
+          {
+            "node": "格式化回應",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "格式化回應": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3600,
+    "timezone": "UTC",
+    "availableInMCP": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "23b80b1b-9eb5-411f-8f9d-7cb638de4dcd",
+  "meta": {
+    "instanceId": "75f6d0668edc9126322dd370108af7dce21e52506e6c188b350a63314eaeb44e"
+  },
+  "id": "Ml19UagJllhA5I4z",
+  "tags": []
+}

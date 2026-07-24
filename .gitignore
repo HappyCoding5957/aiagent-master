@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+*.log.*
+nohup.out
+
+# 暫存檔案
+*.tmp
+*.backup
+*.backup.*
+
+# 上傳檔案
+security_c_uploads/
+uploads/
+
+# 資料庫備份
+*.xlsx.backup
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 敏感資訊
+config.json.backup*
+*.bak
+
+# 測試結果
+curl_test_result.xlsx
+
+# 臨時目錄
+1231/
+
+# 備份文件
+*.backup_*
+*_backup_*
+proxy_server_fixed*.py
+*_v[0-9].py
+*_v[0-9][0-9].py
+
+# Excel 測試文件
+AI模型版本資料庫*.xlsx
+curl_test_result.xlsx
+
+# 圖片
+*.png
+*.jpg
+*.jpeg
+
+# 文本檔案
+*.txt
+
+# 運行時生成的檔案
+attachment3-manager-sso/backend/attachment3_upload_progress.json
+
+# 臨時允許 docs/0204 目錄的所有檔案
+!docs/0204*/**

@@ -1,0 +1,550 @@
+{
+  "name": "附件三知識庫管理系統",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "attachment3-management",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-page",
+      "name": "管理頁面入口",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        304,
+        304
+      ],
+      "webhookId": "attachment3-management"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!DOCTYPE html>\n<html lang=\"zh-Hant\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>客戶問卷 RPA - 附件三知識庫管理</title>\n  <style>\n    body {\n      font-family: 'Microsoft JhengHei', sans-serif;\n      padding: 40px;\n      max-width: 800px;\n      margin: 0 auto;\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      min-height: 100vh;\n    }\n    .container {\n      background: white;\n      padding: 40px;\n      border-radius: 12px;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.2);\n    }\n    h1 {\n      color: #333;\n      border-bottom: 4px solid #667eea;\n      padding-bottom: 15px;\n      margin-top: 0;\n    }\n    .status-card {\n      background: #f8f9fa;\n      border-left: 4px solid #667eea;\n      padding: 20px;\n      margin: 25px 0;\n      border-radius: 6px;\n    }\n    .status-card h3 {\n      margin-top: 0;\n      color: #495057;\n    }\n    .status-info {\n      display: grid;\n      grid-template-columns: 150px 1fr;\n      gap: 10px;\n      font-size: 14px;\n    }\n    .status-label {\n      font-weight: bold;\n      color: #666;\n    }\n    .status-value {\n      color: #333;\n    }\n    .form-section {\n      margin: 30px 0;\n      padding: 25px;\n      border: 2px dashed #ddd;\n      border-radius: 8px;\n      background: #fafafa;\n    }\n    .form-section h3 {\n      margin-top: 0;\n      color: #495057;\n    }\n    .form-group {\n      margin: 20px 0;\n    }\n    label {\n      display: block;\n      margin-bottom: 8px;\n      font-weight: bold;\n      color: #555;\n    }\n    input[type=\"file\"] {\n      padding: 10px;\n      border: 2px solid #ddd;\n      border-radius: 6px;\n      width: 100%;\n      box-sizing: border-box;\n      background: white;\n    }\n    .btn {\n      padding: 12px 30px;\n      border: none;\n      border-radius: 6px;\n      font-size: 16px;\n      cursor: pointer;\n      transition: all 0.3s;\n      font-weight: bold;\n    }\n    .btn-upload {\n      background: #4CAF50;\n      color: white;\n    }\n    .btn-upload:hover {\n      background: #45a049;\n      transform: translateY(-2px);\n      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);\n    }\n    .btn-delete {\n      background: #f44336;\n      color: white;\n    }\n    .btn-delete:hover {\n      background: #da190b;\n      transform: translateY(-2px);\n      box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);\n    }\n    .btn-refresh {\n      background: #2196F3;\n      color: white;\n    }\n    .btn-refresh:hover {\n      background: #0b7dda;\n    }\n    .btn:disabled {\n      opacity: 0.5;\n      cursor: not-allowed;\n    }\n    .alert {\n      padding: 15px;\n      margin: 20px 0;\n      border-radius: 6px;\n      display: none;\n    }\n    .alert.show {\n      display: block;\n    }\n    .alert-success {\n      background: #d4edda;\n      color: #155724;\n      border: 1px solid #c3e6cb;\n    }\n    .alert-error {\n      background: #f8d7da;\n      color: #721c24;\n      border: 1px solid #f5c6cb;\n    }\n    .alert-info {\n      background: #d1ecf1;\n      color: #0c5460;\n      border: 1px solid #bee5eb;\n    }\n    .progress-section {\n      display: none;\n      margin: 20px 0;\n      padding: 20px;\n      background: #f0f8ff;\n      border-radius: 8px;\n      border: 2px solid #2196F3;\n    }\n    .progress-section.show {\n      display: block;\n    }\n    .progress-bar-container {\n      width: 100%;\n      height: 30px;\n      background: #e0e0e0;\n      border-radius: 15px;\n      overflow: hidden;\n      margin: 15px 0;\n      position: relative;\n    }\n    .progress-bar {\n      height: 100%;\n      background: linear-gradient(90deg, #4CAF50, #8BC34A);\n      transition: width 0.5s ease;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      color: white;\n      font-weight: bold;\n      font-size: 14px;\n    }\n    .progress-info {\n      font-size: 14px;\n      color: #0c5460;\n      margin-top: 10px;\n    }\n    .button-group {\n      display: flex;\n      gap: 15px;\n      margin-top: 20px;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>🗂️ 附件三知識庫管理系統</h1>\n\n    <div class=\"alert\" id=\"alertBox\"></div>\n\n    <!-- 當前狀態 -->\n    <div class=\"status-card\">\n      <h3>📊 知識庫狀態</h3>\n      <div class=\"status-info\" id=\"statusInfo\">\n        <div class=\"status-label\">狀態：</div>\n        <div class=\"status-value\" id=\"statusText\">載入中...</div>\n\n        <div class=\"status-label\">檔案名稱：</div>\n        <div class=\"status-value\" id=\"fileName\">-</div>\n\n        <div class=\"status-label\">資料筆數：</div>\n        <div class=\"status-value\" id=\"chunkCount\">-</div>\n\n        <div class=\"status-label\">最後更新：</div>\n        <div class=\"status-value\" id=\"lastUpdate\">-</div>\n\n        <div class=\"status-label\">PDF ID：</div>\n        <div class=\"status-value\" id=\"pdfId\" style=\"font-size: 12px; color: #666;\">-</div>\n      </div>\n      <div class=\"button-group\">\n        <button class=\"btn btn-refresh\" onclick=\"checkStatus()\">🔄 重新整理狀態</button>\n      </div>\n    </div>\n\n    <!-- 上傳區域 -->\n    <div class=\"form-section\">\n      <h3>📤 上傳新的附件三</h3>\n      <p style=\"color: #666; font-size: 14px;\">\n        <strong>說明：</strong>選擇任意「附件三.xlsx」檔案，系統將自動處理並更新知識庫。<br>\n        ⚠️ 上傳新檔案會自動刪除舊的資料。\n      </p>\n      <form id=\"uploadForm\">\n        <div class=\"form-group\">\n          <label for=\"file\">選擇附件三.xlsx：</label>\n          <input type=\"file\" id=\"file\" name=\"file\" accept=\".xlsx\" required />\n        </div>\n        <button type=\"submit\" class=\"btn btn-upload\" id=\"uploadBtn\">🚀 上傳並更新知識庫</button>\n      </form>\n\n      <!-- 進度顯示 -->\n      <div class=\"progress-section\" id=\"progressSection\">\n        <h4 style=\"margin-top: 0;\">⏳ 上傳進度</h4>\n        <div class=\"progress-bar-container\">\n          <div class=\"progress-bar\" id=\"progressBar\">0%</div>\n        </div>\n        <div class=\"progress-info\">\n          <strong>當前階段：</strong><span id=\"progressStage\">-</span><br>\n          <strong>狀態訊息：</strong><span id=\"progressMessage\">-</span>\n        </div>\n      </div>\n    </div>\n\n    <!-- 刪除區域 -->\n    <div class=\"form-section\">\n      <h3>🗑️ 刪除知識庫</h3>\n      <p style=\"color: #721c24; font-size: 14px;\">\n        <strong>⚠️ 警告：</strong>此操作將從資料庫中刪除所有附件三相關資料，無法復原！\n      </p>\n      <button class=\"btn btn-delete\" onclick=\"deleteKnowledgeBase()\">🗑️ 刪除附件三知識庫</button>\n    </div>\n  </div>\n\n  <script>\n    const API_BASE = 'http://10.80.15.16:5678/webhook';\n    let progressInterval = null;\n\n    // 頁面載入時檢查狀態\n    window.onload = function() {\n      checkStatus();\n    };\n\n    // 檢查知識庫狀態\n    async function checkStatus() {\n      try {\n        // print-1（加在 fetch 上面）：標記開始查狀態\n        console.log('[print-1] checkStatus() start', `${API_BASE}/attachment3-status`);\n\n        const response = await fetch(`${API_BASE}/attachment3-status`);\n\n        // print-2（加在 response.ok 檢查上面）：把狀態碼/Content-Type 印出來\n        console.log('[print-2] status=', response.status, 'content-type=', response.headers.get('content-type'));\n\n        if (!response.ok) {\n          throw new Error(`HTTP ${response.status}`);\n        }\n\n        // 用 text 先接住（避免 204 / 空 body 直接炸 json）\n        const rawText = await response.text();\n\n        // print-3（加在 JSON.parse 上面）：印出回應原文（避免過長，只切前 300）\n        console.log('[print-3] rawText(head300)=', rawText ? rawText.slice(0, 300) : '(empty)');\n\n        if (!rawText || !rawText.trim()) {\n          // 這就是你現在遇到的核心：空回應\n          throw new Error('空回應（body 為空），無法解析 JSON');\n        }\n\n        let data;\n        try {\n          data = JSON.parse(rawText);\n        } catch (e) {\n          // print-4（加在丟錯前）：JSON 解析失敗時，把原文再印一次方便你追\n          console.log('[print-4] JSON.parse failed, rawText(head300)=', rawText.slice(0, 300));\n          throw new Error(`JSON 解析失敗：${e.message}`);\n        }\n\n        // print-5（加在資料判斷上面）：確認 data 結構\n        console.log('[print-5] parsed data=', data);\n\n        if (data.exists) {\n          document.getElementById('statusText').innerHTML = '✅ <strong style=\"color: #28a745;\">已建立</strong>';\n          document.getElementById('fileName').textContent = data.name || '-';\n          document.getElementById('chunkCount').textContent = data.chunk_count ?? '-';\n          document.getElementById('lastUpdate').textContent = data.last_update || '-';\n          document.getElementById('pdfId').textContent = data.pdf_id || '-';\n        } else {\n          document.getElementById('statusText').innerHTML = '❌ <strong style=\"color: #dc3545;\">未建立</strong>';\n          document.getElementById('fileName').textContent = '-';\n          document.getElementById('chunkCount').textContent = '-';\n          document.getElementById('lastUpdate').textContent = '-';\n          document.getElementById('pdfId').textContent = '-';\n        }\n\n        // print-6（加在結尾下面）：標記結束\n        console.log('[print-6] checkStatus() done');\n      } catch (error) {\n        console.error('檢查狀態失敗:', error);\n        document.getElementById('statusText').innerHTML =\n          '⚠️ <strong style=\"color: #dc3545;\">連線失敗</strong>';\n      }\n    }\n\n    // 階段名稱對應\n    const STAGE_NAMES = {\n      'init': '初始化',\n      'reading': '讀取檔案',\n      'embedding': '生成向量',\n      'database': '寫入資料庫',\n      'complete': '完成',\n      'error': '錯誤',\n      'idle': '閒置'\n    };\n\n    // 輪詢進度\n    async function checkProgress() {\n      try {\n        const response = await fetch(`${API_BASE}/attachment3-progress`);\n        if (!response.ok) return;\n        \n        const rawText = await response.text();\n\n        // print-p1（加在 JSON.parse 上面）\n        console.log('[print-p1] progress rawText(head300)=', rawText ? rawText.slice(0, 300) : '(empty)');\n\n        if (!rawText || !rawText.trim()) {\n          // 空回應就直接跳出，不更新（避免炸掉輪詢）\n          return;\n        }\n\n        let progress;\n        try {\n          progress = JSON.parse(rawText);\n        } catch (e) {\n          console.log('[print-p2] progress JSON.parse failed:', e.message);\n          return;\n        }\n        \n        // 更新進度條\n        const percent = progress.percent || 0;\n        const progressBar = document.getElementById('progressBar');\n        progressBar.style.width = percent + '%';\n        progressBar.textContent = percent + '%';\n        \n        // 更新階段和訊息\n        document.getElementById('progressStage').textContent = STAGE_NAMES[progress.stage] || progress.stage;\n        document.getElementById('progressMessage').textContent = progress.message || '-';\n        \n        // 如果完成或錯誤，停止輪詢\n        if (progress.stage === 'complete' || progress.stage === 'error') {\n          stopProgressPolling();\n          \n          if (progress.stage === 'complete') {\n            setTimeout(() => {\n              document.getElementById('progressSection').classList.remove('show');\n              checkStatus();\n            }, 2000);\n          }\n        }\n      } catch (error) {\n        console.error('查詢進度失敗:', error);\n      }\n    }\n\n    // 開始輪詢進度\n    function startProgressPolling() {\n      document.getElementById('progressSection').classList.add('show');\n      document.getElementById('uploadBtn').disabled = true;\n      progressInterval = setInterval(checkProgress, 1000); // 每秒查詢一次\n    }\n\n    // 停止輪詢進度\n    function stopProgressPolling() {\n      if (progressInterval) {\n        clearInterval(progressInterval);\n        progressInterval = null;\n      }\n      document.getElementById('uploadBtn').disabled = false;\n    }\n\n    // 上傳表單處理\n    document.getElementById('uploadForm').onsubmit = async function(e) {\n      e.preventDefault();\n\n      const fileInput = document.getElementById('file');\n      const file = fileInput.files[0];\n\n      if (!file) {\n        showAlert('請選擇檔案', 'error');\n        return;\n      }\n\n      // 開始輪詢進度\n      startProgressPolling();\n\n      const formData = new FormData();\n      formData.append('file', file);\n\n      try {\n        const response = await fetch(`${API_BASE}/attachment3-upload`, {\n          method: 'POST',\n          body: formData\n        });\n\n        const text = await response.text();\n        \n        // 解析 JSON（從 === JSON_OUTPUT_START === 到 === JSON_OUTPUT_END === 之間）\n        const jsonMatch = text.match(/=== JSON_OUTPUT_START ===\\s*([\\s\\S]*?)\\s*=== JSON_OUTPUT_END ===/);\n        \n        if (jsonMatch && jsonMatch[1]) {\n          const result = JSON.parse(jsonMatch[1]);\n          \n          if (result.success) {\n            showAlert(`✅ 上傳成功！<br>PDF ID: ${result.pdf_id}<br>資料筆數: ${result.chunk_count}`, 'success');\n            fileInput.value = '';\n            checkStatus();\n          } else {\n            showAlert(`❌ 上傳失敗：${result.error || '未知錯誤'}`, 'error');\n          }\n        } else {\n          showAlert(`❌ 上傳失敗：無法解析回應`, 'error');\n        }\n      } catch (error) {\n        showAlert(`❌ 上傳失敗：${error.message}`, 'error');\n        console.error('上傳失敗:', error);\n      } finally {\n        stopProgressPolling();\n      }\n    };\n\n    // 刪除知識庫\n    async function deleteKnowledgeBase() {\n      if (!confirm('⚠️ 確定要刪除附件三知識庫嗎？\\n\\n此操作將刪除所有相關資料，且無法復原！')) {\n        return;\n      }\n\n      try {\n        const response = await fetch(`${API_BASE}/attachment3-delete`, {\n          method: 'POST'\n        });\n\n        const result = await response.json();\n\n        if (response.ok) {\n          showAlert(`✅ 刪除成功！<br>已刪除 ${result.deleted_chunks} 個 chunks 和 ${result.deleted_files} 個 files`, 'success');\n          checkStatus();\n        } else {\n          showAlert(`❌ 刪除失敗：${result.error || '未知錯誤'}`, 'error');\n        }\n      } catch (error) {\n        showAlert(`❌ 刪除失敗：${error.message}`, 'error');\n        console.error('刪除失敗:', error);\n      }\n    }\n\n    // 顯示提示訊息\n    function showAlert(message, type) {\n      const alertBox = document.getElementById('alertBox');\n      alertBox.className = `alert alert-${type} show`;\n      alertBox.innerHTML = message;\n\n      setTimeout(() => {\n        alertBox.className = 'alert';\n      }, 5000);\n    }\n  </script>\n</body>\n</html>",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-html",
+      "name": "回傳HTML頁面",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "path": "attachment3-status",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-status",
+      "name": "狀態查詢API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        304,
+        512
+      ],
+      "webhookId": "attachment3-status"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 測試：直接返回固定數據\nreturn [{\n  json: {\n    exists: false,\n    pdf_id: null,\n    name: null,\n    chunk_count: null,\n    last_update: null,\n    unit: null\n  }\n}];"
+      },
+      "id": "postgres-query",
+      "name": "查詢DB狀態",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "attachment3-upload",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-upload",
+      "name": "上傳API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        304,
+        704
+      ],
+      "webhookId": "attachment3-upload"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 提取上傳檔案的 binary data\nconst items = $input.all();\n\nif (!items || items.length === 0) {\n  return [{\n    json: {\n      success: false,\n      error: '沒有接收到檔案'\n    }\n  }];\n}\n\n// 取得檔案的 binary data\nconst item = items[0];\n\nif (!item.binary || !item.binary.file) {\n  return [{\n    json: {\n      success: false,\n      error: '無法找到上傳的檔案'\n    }\n  }];\n}\n\nconst fileData = item.binary.file;\n\n// 返回檔案資訊和 base64 數據\nreturn [{\n  json: {\n    success: true,\n    fileName: fileData.fileName || 'unknown',\n    mimeType: fileData.mimeType || 'application/octet-stream',\n    fileSize: fileData.fileSize || 0,\n    base64Data: fileData.data  // base64 編碼的檔案內容\n  }\n}];"
+      },
+      "id": "save-upload-file",
+      "name": "儲存上傳檔案",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://10.100.40.5:5555/api/attachment3/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"base64Data\": $json.base64Data } }}",
+        "options": {}
+      },
+      "id": "exec-upload",
+      "name": "執行上傳腳本",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// HTTP Request 返回的 JSON\nconst apiResult = $input.first().json;\n\n// 構建帶標記的文字輸出\nconst output = `=== JSON_OUTPUT_START ===\n${JSON.stringify(apiResult, null, 2)}\n=== JSON_OUTPUT_END ===`;\n\n// 使用 text 欄位（與回傳節點一致）\nreturn [{\n  json: apiResult,\n  text: output\n}];"
+      },
+      "id": "code-upload-result",
+      "name": "解析上傳結果",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-upload",
+      "name": "回傳上傳結果",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1056,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "DELETE",
+        "path": "attachment3-delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-delete",
+      "name": "刪除API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        304,
+        912
+      ],
+      "webhookId": "attachment3-delete"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM pdfchunk WHERE pdf_id IN (SELECT id FROM pdffile WHERE name = '附件三_EnvSafety_atta3_知識庫' AND unit = 'SYSTEM')",
+        "options": {}
+      },
+      "id": "postgres-delete-chunks",
+      "name": "刪除Chunks",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        512,
+        912
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "8d5TWaUi0jPZebQ3",
+          "name": "PostgreSQL DGTK"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM pdffile WHERE name = '附件三_EnvSafety_atta3_知識庫' AND unit = 'SYSTEM'",
+        "options": {}
+      },
+      "id": "postgres-delete-file",
+      "name": "刪除File",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        704,
+        912
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "8d5TWaUi0jPZebQ3",
+          "name": "PostgreSQL DGTK"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted_chunks\": 0, \"deleted_files\": 1, \"message\": \"刪除成功\" } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-delete",
+      "name": "回傳刪除結果",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "path": "attachment3-progress",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "aaebd8d1-2847-46ea-9ff3-fa03aab6a37c",
+      "name": "進度查詢API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        512,
+        1008
+      ],
+      "webhookId": "2fc0c464-bfc9-43ab-a021-1e313a1418c4"
+    },
+    {
+      "parameters": {
+        "command": "# 讀取進度檔案並輸出 JSON\nPROGRESS_FILE=\"/tmp/attachment3_upload_progress.json\"\n\nif [ -f \"$PROGRESS_FILE\" ]; then\n  # 檔案存在，直接輸出內容\n  cat \"$PROGRESS_FILE\"\nelse\n  # 檔案不存在，輸出預設 JSON\n  echo '{\"stage\":\"idle\",\"percent\":0,\"message\":\"尚未開始\"}'\nfi"
+      },
+      "id": "8fb95c68-5b13-49c6-a8ea-09dc30dc5789",
+      "name": "讀取進度檔案",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        704,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "31424724-2f50-49e0-911c-d00cf5f1956c",
+      "name": "回傳進度JSON",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        912,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 直接返回固定的測試數據\nreturn [{\n  json: {\n    exists: false,\n    pdf_id: null,\n    name: null,\n    chunk_count: null,\n    last_update: null,\n    unit: null,\n    debug: \"generated_from_code_node\"\n  }\n}];"
+      },
+      "id": "36081e53-87c9-4bbb-9bd1-97d117b8943a",
+      "name": "生成狀態數據",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 保底進度輸出\nconsole.log('[progress-fallback-1] input count =', $input.all().length);\n\nconst items = $input.all();\n\nif (!items || items.length === 0 || !items[0].json) {\n  console.log('[progress-fallback-2] empty -> default idle');\n  return [{\n    json: {\n      stage: 'idle',\n      percent: 0,\n      message: '尚未開始',\n      _fallback: 'empty_input'\n    }\n  }];\n}\n\nconst d = items[0].json || {};\nconsole.log('[progress-fallback-3] keys =', Object.keys(d));\n\nreturn [{\n  json: {\n    stage: d.stage || 'idle',\n    percent: d.percent ?? 0,\n    message: d.message || '-',\n    _fallback: 'none'\n  }\n}];"
+      },
+      "id": "fallback_progress_output",
+      "name": "保底進度輸出",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 保底上傳輸出 - 統一使用 text 欄位\nconsole.log('[upload-fallback-1] input count =', $input.all().length);\n\nconst items = $input.all();\n\nlet jsonData;\nif (!items || items.length === 0 || !items[0].json) {\n  console.log('[upload-fallback-2] empty -> error response');\n  jsonData = {\n    success: false,\n    error: '上傳失敗：無法取得上游結果',\n    _fallback: 'empty_input'\n  };\n} else {\n  const d = items[0].json || {};\n  console.log('[upload-fallback-3] keys =', Object.keys(d));\n  jsonData = d;\n}\n\n// 生成帶標記的文字輸出（前端需要）\nconst textOutput = `=== JSON_OUTPUT_START ===\n${JSON.stringify(jsonData, null, 2)}\n=== JSON_OUTPUT_END ===`;\n\nreturn [{\n  json: jsonData,\n  text: textOutput\n}];"
+      },
+      "id": "fallback_upload_output",
+      "name": "保底上傳輸出",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 保底刪除輸出\nconsole.log('[delete-fallback-1] input count =', $input.all().length);\n\nconst items = $input.all();\n\nif (!items || items.length === 0 || !items[0].json) {\n  console.log('[delete-fallback-2] empty -> assume success');\n  return [{\n    json: {\n      success: true,\n      message: '刪除完成',\n      deleted_chunks: 0,\n      deleted_file: true,\n      _fallback: 'empty_input'\n    }\n  }];\n}\n\nconst d = items[0].json || {};\nconsole.log('[delete-fallback-3] keys =', Object.keys(d));\n\nreturn [{\n  json: {\n    success: true,\n    message: d.message || '刪除完成',\n    deleted_chunks: d.deleted_chunks ?? 0,\n    deleted_file: d.deleted_file ?? true,\n    _fallback: 'none'\n  }\n}];"
+      },
+      "id": "fallback_delete_output",
+      "name": "保底刪除輸出",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        912
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "管理頁面入口": {
+      "main": [
+        [
+          {
+            "node": "回傳HTML頁面",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "狀態查詢API": {
+      "main": [
+        [
+          {
+            "node": "生成狀態數據",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "格式化狀態回應": {
+      "main": [
+        [
+          {
+            "node": "回傳狀態JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "上傳API": {
+      "main": [
+        [
+          {
+            "node": "儲存上傳檔案",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "執行上傳腳本": {
+      "main": [
+        [
+          {
+            "node": "解析上傳結果",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "解析上傳結果": {
+      "main": [
+        [
+          {
+            "node": "保底上傳輸出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "刪除API": {
+      "main": [
+        [
+          {
+            "node": "刪除Chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "刪除Chunks": {
+      "main": [
+        [
+          {
+            "node": "刪除File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "刪除File": {
+      "main": [
+        [
+          {
+            "node": "保底刪除輸出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "儲存上傳檔案": {
+      "main": [
+        [
+          {
+            "node": "執行上傳腳本",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "進度查詢API": {
+      "main": [
+        [
+          {
+            "node": "讀取進度檔案",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "讀取進度檔案": {
+      "main": [
+        [
+          {
+            "node": "保底進度輸出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "保底進度輸出": {
+      "main": [
+        [
+          {
+            "node": "回傳進度JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "保底上傳輸出": {
+      "main": [
+        [
+          {
+            "node": "回傳上傳結果",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "保底刪除輸出": {
+      "main": [
+        [
+          {
+            "node": "回傳刪除結果",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "6e4c5d69-937f-4002-a994-09d9bf1f8f7e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "75f6d0668edc9126322dd370108af7dce21e52506e6c188b350a63314eaeb44e"
+  },
+  "id": "UikWrnAd5k5YzUa7",
+  "tags": []
+}

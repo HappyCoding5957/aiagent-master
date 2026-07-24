@@ -1,0 +1,14 @@
+{
+    "sso_realm": "Infra",
+    "sso_client_id": "MeetBook",
+    "sso_client_secret": "WKRuv36gORlne3DP3aVhx1sJwqoJP8tq",
+    "frontend_url": "http://ssw01.ennostar.com/",
+    "web_port": 4204,
+    "n8n_api_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyM2YwNzMxNS1hN2M5LTRjMjktODQxMS02OTI2MjlkNDRmMTIiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzYwNTEyNjk5fQ.qW23MNSzD4AhAZA6yXJwvXWOSDkrHCHZS8vvG3g6jhM",
+    "admin_list": [
+        "請填入管理員工號"
+    ],
+    "upload_dir": "security_c_uploads",
+    "db_path": "附件三.xlsx",
+    "description": "客戶問卷 RPA - Security C"
+}

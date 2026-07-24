@@ -1,0 +1,222 @@
+{
+  "name": "工作流程 7: 客戶問卷RPA(Security C)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "security-c-upload",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "file"
+        }
+      },
+      "id": "78a593eb-81e9-4167-bd27-b91131647c83",
+      "name": "Webhook 問卷上傳",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        256
+      ],
+      "webhookId": "security-c-upload"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 這顆只用來看 Webhook 出來的 item 長什麼樣子\nconst items = $input.all();\n\n// ★ print 加在這一行「下面」：列出每個 item 的 json / binary 鍵\nconsole.log('[檢查binary結構] 收到 items 數量:', items.length);\nitems.forEach((item, idx) => {\n  console.log(`[檢查binary結構] item #${idx} keys:`, Object.keys(item));\n  console.log(`[檢查binary結構] item #${idx} has binary:`, !!item.binary);\n  if (item.binary) {\n    console.log(`[檢查binary結構] item #${idx} binary keys:`, Object.keys(item.binary));\n  }\n});\n\n// ★ 這裡不動，原樣把所有東西傳給下一顆（包含 binary）\nreturn items;"
+      },
+      "id": "e8b07edd-3064-41c8-9f10-0a34ca458506",
+      "name": "檢查binary結構",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ====================================================================\n// 準備API請求：將 binary.file 轉換為 base64 供 Flask API 使用\n// ====================================================================\n\nconst items = $input.all();\n\nif (!items.length) {\n  throw new Error('[準備API] 沒有收到任何 item，請確認前置節點');\n}\n\n// 取得第一個 item\nconst item = items[0];\n\n// ★ print 加在這一行「下面」：先看整個 item 結構\nconsole.log('[準備API][DEBUG] item 結構:', {\n  keys: Object.keys(item),\n  hasBinary: !!item.binary,\n  hasJson: !!item.json,\n});\n\nconst binary = item.binary || {};\nconst json = item.json || {};\n\n// ★ print 加在這一段「下面」：看 binary 裡有哪些欄位\nconsole.log('[準備API][DEBUG] binary keys:', Object.keys(binary));\n\n// 嘗試從 binary.file 或 binary.data 取得檔案；若都沒有，就抓第一個 key\nlet binSource = null;\n\nif (binary.file) {\n  binSource = binary.file;\n  console.log('[準備API] 來源: binary.file');\n} else if (binary.data) {\n  binSource = binary.data;\n  console.log('[準備API] 來源: binary.data');\n} else {\n  const keys = Object.keys(binary);\n  if (keys.length > 0) {\n    const firstKey = keys[0];\n    binSource = binary[firstKey];\n    console.log(`[準備API] 來源: binary.${firstKey} (自動偵測)`);\n  } else {\n    console.log('[準備API][ERROR] binary 為空物件:', binary);\n    throw new Error('[準備API] 找不到可用的 binary 檔案 (file/data)');\n  }\n}\n\n// 取得 base64 資料\nconst base64Data = binSource.data;\n\nif (!base64Data) {\n  // ★ print 加在這裡「下面」：base64Data 沒東西時，把 binSource 印出來\n  console.log('[準備API][ERROR] binSource 內容為:', binSource);\n  throw new Error('[準備API] binary 中沒有 data 欄位');\n}\n\n// ★ print 加在這裡「下面」：截一小段 base64 看格式\nconsole.log('[準備API] base64 長度:', base64Data.length);\nconsole.log('[準備API][DEBUG] base64 前 80 字:', String(base64Data).slice(0, 80));\n\n// 嘗試取得客戶名稱（從查詢參數或 JSON）\nconst clientName = \n  json.client_name ||\n  (json.query && json.query.client_name) ||\n  '未指定客戶';\n\nconsole.log('[準備API] 客戶名稱:', clientName);\nconsole.log('[準備API] ✅ 準備完成');\n\n// 回傳給下一個節點\nreturn [{\n  json: {\n    file_base64: base64Data,\n    client_name: clientName\n  }\n}];"
+      },
+      "id": "17a99c71-faae-409e-a11a-8cf4b9e63ccb",
+      "name": "準備API請求",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://10.100.40.5:5555/api/security-c/match-from-base64",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"file_base64\": \"={{ $json.file_base64 }}\",\n  \"client_name\": \"={{ $json.client_name }}\"\n}",
+        "options": {
+          "timeout": 600000
+        }
+      },
+      "id": "8e9c307b-8331-4360-90c2-0512e8cf2b22",
+      "name": "調用Flask 問卷API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        96,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ====================================================================\n// 轉換Base64為Binary：將 Flask 回傳的 base64 轉為 n8n binary 格式\n// ====================================================================\n\nconst res = $input.first().json;\n\nconsole.log('[轉換Binary] 收到 Flask 回應:', {\n  success: res.success,\n  file_name: res.file_name,\n  has_base64: !!res.file_base64,\n  report: res.report\n});\n\nif (!res.success) {\n  throw new Error('Security C API 處理失敗: ' + (res.error || '未知錯誤'));\n}\n\nconst fileBase64 = res.file_base64;\nconst fileName = res.file_name || 'security_c_result.xlsx';\nconst report = res.report || {};\n\nif (!fileBase64) {\n  throw new Error('Flask 回應中沒有 file_base64');\n}\n\nconsole.log('[轉換Binary] 檔案名稱:', fileName);\nconsole.log('[轉換Binary] base64 長度:', fileBase64.length);\nconsole.log('[轉換Binary] 比對報告:', report);\n\n// 轉換為 binary 格式\nreturn [{\n  json: {\n    success: true,\n    file_name: fileName,\n    report: report\n  },\n  binary: {\n    data: {\n      data: fileBase64,\n      fileName: fileName,\n      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'\n    }\n  }\n}];"
+      },
+      "id": "0c7e9f67-7251-4d96-8389-5d6de106ffad",
+      "name": "轉換Base64為Binary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Disposition",
+                "value": "=attachment; filename=\"{{ $json.file_name }}\""
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              }
+            ]
+          }
+        }
+      },
+      "id": "259f1106-a96a-47b6-b816-f4ae4b7cc479",
+      "name": "回傳處理後Excel",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        528,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "path": "security-c-upload-page",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a8cce9c9-4c0d-4889-9fdf-3ab4310ded28",
+      "name": "上傳頁面入口",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        736
+      ],
+      "webhookId": "security-c-upload-page-correct"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!DOCTYPE html>\n<html lang=\"zh-Hant\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>客戶問卷 RPA - Security C 上傳</title>\n  <style>\n    body { font-family: 'Microsoft JhengHei', sans-serif; padding: 40px; max-width: 600px; margin: 0 auto; background: #f5f5f5; }\n    .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }\n    h1 { color: #333; border-bottom: 3px solid #4CAF50; padding-bottom: 10px; }\n    .form-group { margin: 20px 0; }\n    label { display: block; margin-bottom: 8px; font-weight: bold; }\n    input[type=\"file\"], input[type=\"text\"] { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; box-sizing: border-box; }\n    button { background: #4CAF50; color: white; padding: 12px 30px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }\n    button:hover { background: #45a049; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>📋 客戶問卷 RPA (Security C)</h1>\n    <p><strong>說明：</strong>上傳客戶問卷 Excel 檔案（附件二格式），系統將自動比對資料庫並填入 D、E 欄位。</p>\n    <form action=\"http://10.80.15.16:5678/webhook/security-c-upload\" method=\"POST\" enctype=\"multipart/form-data\">\n      <div class=\"form-group\">\n        <label for=\"file\">選擇附件二.xlsx：</label>\n        <input type=\"file\" id=\"file\" name=\"file\" accept=\".xlsx\" required />\n      </div>\n      <div class=\"form-group\">\n        <label for=\"client_name\">客戶名稱（選填）：</label>\n        <input type=\"text\" id=\"client_name\" name=\"client_name\" placeholder=\"例如：宏齊、Lumileds\" />\n      </div>\n      <button type=\"submit\">🚀 上傳並處理</button>\n    </form>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "6739e331-1bb4-4438-acd0-955e7b9a49ef",
+      "name": "回傳HTML頁面",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -144,
+        736
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook 問卷上傳": {
+      "main": [
+        [
+          {
+            "node": "檢查binary結構",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "檢查binary結構": {
+      "main": [
+        [
+          {
+            "node": "準備API請求",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "準備API請求": {
+      "main": [
+        [
+          {
+            "node": "調用Flask 問卷API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "調用Flask 問卷API": {
+      "main": [
+        [
+          {
+            "node": "轉換Base64為Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "轉換Base64為Binary": {
+      "main": [
+        [
+          {
+            "node": "回傳處理後Excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "上傳頁面入口": {
+      "main": [
+        [
+          {
+            "node": "回傳HTML頁面",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "bcc814d0-044d-48cd-8c91-27d7c620ea90",
+  "meta": {
+    "instanceId": "75f6d0668edc9126322dd370108af7dce21e52506e6c188b350a63314eaeb44e"
+  },
+  "id": "ZTzzv9xuHqKdkjQ3",
+  "tags": []
+}

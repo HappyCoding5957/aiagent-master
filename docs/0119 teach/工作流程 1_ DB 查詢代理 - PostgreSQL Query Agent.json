@@ -1,0 +1,256 @@
+{
+  "name": "工作流程 1: DB 查詢代理 - PostgreSQL Query Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "it-budget-query",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        304
+      ],
+      "webhookId": "ansible-query-webhook",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "srIqK5dAro7ENfyk",
+          "name": "ChatBot_RAG_API_Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "search_term",
+              "name": "search_term",
+              "value": "={{ $json.query.search_term || $json.body.search_term || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-params",
+      "name": "提取參數",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  category_name AS hostname,\n  category_code AS ip,\n  driver_tag AS package_name,\n  amount_2025 AS version\nFROM public.it_budget_pivot\nORDER BY created_at DESC\nLIMIT 20\n",
+        "options": {}
+      },
+      "id": "postgres-node",
+      "name": "PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        672,
+        304
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "GmzSoRabJKlngB3K",
+          "name": "n8n-PostgreSQL"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "id": "aggregate-node",
+      "name": "匯集結果",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        864,
+        304
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "Ansible DB 查詢成功",
+              "type": "string"
+            },
+            {
+              "id": "search_term",
+              "name": "search_term",
+              "value": "={{ $('提取參數').item.json.search_term }}",
+              "type": "string"
+            },
+            {
+              "id": "results_count",
+              "name": "results_count",
+              "value": "={{ $('PostgreSQL').all().filter(item => item.json && Object.keys(item.json).length > 0 && item.json.hostname).length }}",
+              "type": "number"
+            },
+            {
+              "id": "data",
+              "name": "data",
+              "value": "={{ { search_term: $('提取參數').item.json.search_term, ansible_results: $('PostgreSQL').all().filter(item => item.json && Object.keys(item.json).length > 0 && item.json.hostname).map(item => item.json) } }}",
+              "type": "object"
+            },
+            {
+              "id": "trace_id",
+              "name": "trace_id",
+              "value": "={{ $execution.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "格式化回應",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1072,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "content": "輸入層\n接收API請求",
+        "height": 224,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        176,
+        240
+      ],
+      "id": "e3da8ee0-40ec-4a64-a42b-47ddedb0d5c2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "處理層\n解析查詢條件 → 查詢資料來源(DB/API/檔案) → 整合查詢結果",
+        "height": 224,
+        "width": 582,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        432,
+        240
+      ],
+      "id": "499b21a9-75cf-4410-b5f8-a3c8cf488d10",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "輸出層\n格式化 JSON 回應",
+        "height": 224,
+        "width": 214,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        240
+      ],
+      "id": "6eb72677-cf9a-4b6f-a42d-52b6fa064a8b",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "提取參數",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "提取參數": {
+      "main": [
+        [
+          {
+            "node": "PostgreSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PostgreSQL": {
+      "main": [
+        [
+          {
+            "node": "匯集結果",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "匯集結果": {
+      "main": [
+        [
+          {
+            "node": "格式化回應",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3600,
+    "timezone": "UTC"
+  },
+  "versionId": "8e82248e-0bf4-4595-bb35-0348a9613e8a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "75f6d0668edc9126322dd370108af7dce21e52506e6c188b350a63314eaeb44e"
+  },
+  "id": "UFKuOGEphR9zc55U",
+  "tags": []
+}

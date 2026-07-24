@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 上傳系統使用統計 - ESG Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft JhengHei', Arial, sans-serif; background: #f5f5f5; }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header h1 { font-size: 24px; }
+        header .user { font-size: 14px; opacity: 0.9; margin-top: 5px; }
+        
+        main { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card.today { border-left: 4px solid #4CAF50; }
+        .stat-card.total { border-left: 4px solid #2196F3; }
+        .stat-card.users { border-left: 4px solid #FF9800; }
+        
+        .stat-value { font-size: 36px; font-weight: bold; color: #333; }
+        .stat-label { font-size: 14px; color: #666; margin-top: 5px; }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .chart-container h2 { margin-bottom: 15px; color: #333; }
+        
+        .logs-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logs-container h2 { margin-bottom: 15px; color: #333; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: #333; }
+        tr:hover { background: #f8f9fa; }
+        td { font-size: 14px; }
+        
+        .status-success { color: #4CAF50; font-weight: bold; }
+        .status-fail { color: #f44336; font-weight: bold; }
+        
+        .loading { text-align: center; padding: 40px; color: #666; }
+        
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #666;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-btn:hover { background: #555; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📊 上傳系統使用統計</h1>
+        <div class="user">用戶：{{user_name}} ({{user_id}})</div>
+    </header>
+    
+    <main>
+        <a href="/esg/upload/" class="back-btn">← 返回上傳頁面</a>
+        
+        <div class="stats-grid">
+            <div class="stat-card today">
+                <div class="stat-value" id="todayCount">-</div>
+                <div class="stat-label">今日上傳次數</div>
+            </div>
+            <div class="stat-card total">
+                <div class="stat-value" id="totalCount">-</div>
+                <div class="stat-label">總上傳次數</div>
+            </div>
+            <div class="stat-card users">
+                <div class="stat-value" id="userCount">-</div>
+                <div class="stat-label">總使用人數</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h2>📈 每小時使用趨勢</h2>
+            <canvas id="hourlyChart" height="80"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h2>📈 每週使用趨勢</h2>
+            <canvas id="weeklyChart" height="80"></canvas>
+        </div>
+        
+        <div class="logs-container">
+            <h2>📋 最近使用記錄</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>用戶</th>
+                        <th>姓名</th>
+                        <th>檔案</th>
+                        <th>狀態</th>
+                        <th>Chunks</th>
+                    </tr>
+                </thead>
+                <tbody id="logsTable">
+                    <tr><td colspan="6" class="loading">載入中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <script>
+        let hourlyChart, weeklyChart;
+        
+        async function loadStats() {
+            try {
+                const response = await fetch('/esg/download/api/stats');
+                const data = await response.json();
+                
+                document.getElementById('todayCount').textContent = data.today_requests || 0;
+                document.getElementById('totalCount').textContent = data.total_requests || 0;
+                document.getElementById('userCount').textContent = data.total_users || 0;
+                
+                // 渲染圖表
+                renderCharts(data.logs || []);
+                
+                // 渲染記錄表格
+                renderTable(data.logs || []);
+                
+            } catch (error) {
+                console.error('載入統計失敗:', error);
+            }
+        }
+        
+        function renderCharts(logs) {
+            // 每小時統計
+            const hourlyData = {};
+            const now = new Date();
+            for (let i = 23; i >= 0; i--) {
+                const hour = new Date(now.getTime() - i * 3600000).getHours();
+                hourlyData[hour] = 0;
+            }
+            
+            logs.forEach(log => {
+                const date = new Date(log.timestamp);
+                const hour = date.getHours();
+                if (hourlyData[hour] !== undefined) {
+                    hourlyData[hour]++;
+                }
+            });
+            
+            const hourlyCtx = document.getElementById('hourlyChart').getContext('2d');
+            if (hourlyChart) hourlyChart.destroy();
+            hourlyChart = new Chart(hourlyCtx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(hourlyData).map(h => h + ':00'),
+                    datasets: [{
+                        label: '上傳次數',
+                        data: Object.values(hourlyData),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, max: 20, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+            
+            // 每週統計
+            const weeklyData = {};
+            const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+            days.forEach(d => weeklyData[d] = 0);
+            
+            logs.forEach(log => {
+                const date = new Date(log.timestamp);
+                const day = days[date.getDay()];
+                weeklyData[day]++;
+            });
+            
+            const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+            if (weeklyChart) weeklyChart.destroy();
+            weeklyChart = new Chart(weeklyCtx, {
+                type: 'bar',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: '上傳次數',
+                        data: Object.values(weeklyData),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#4CAF50'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+        }
+        
+        function renderTable(logs) {
+            const tbody = document.getElementById('logsTable');
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="loading">無記錄</td></tr>';
+                return;
+            }
+            
+            const completeLogs = logs.filter(log => log.action === 'security_c_complete');
+            tbody.innerHTML = completeLogs.slice().reverse().map(log => {
+                const date = new Date(log.timestamp);
+                const time = date.toLocaleString('zh-TW');
+                const statusClass = log.status === 'success' ? 'status-success' : 'status-fail';
+                
+                return `
+                    <tr>
+                        <td>${time}</td>
+                        <td>${log.user || '-'}</td>
+                        <td>${log.user_name || '-'}</td>
+                        <td>${log.file_name || '-'}</td>
+                        <td class="${statusClass}">${log.status === 'success' ? '成功' : '失敗'}</td>
+                        <td>${log.chunks || 0}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        window.addEventListener('load', loadStats);
+    </script>
+</body>
+</html>

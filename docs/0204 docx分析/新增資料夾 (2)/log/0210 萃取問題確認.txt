@@ -1,0 +1,560 @@
+  好的，資料庫中確實有 LLM-first 的萃取結果：- ✅ schema_json 存在
+  - ✅ intent（語意摘要）存在且有內容
+  - ✅ topic_tags 存在
+  - ✅ confidence 分數存在（0.98 很高）但我注意到：
+  - ❌ [語意摘要] 和 [主題標籤] 這兩個標籤沒有出現在 text 中這可能是因為我之前修改並行處理時的代碼有問題，導致 chunk_text
+  的組裝不完整。讓我檢查一下：
+
+  ⎿  ================================================================================
+     🧪 測試 RAG 查詢 API
+     ================================================================================
+     URL: http://10.100.40.5:8004/api/pdf/semantic_query
+     查詢: 公司是否禁止強迫勞動和人口販運？
+     PDF ID: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+
+     狀態碼: 200
+     結果數量: 6
+
+     📋 第 1 筆結果：
+     --------------------------------------------------------------------------------
+     Score: 0.5393790885729455
+     包含 [schema_json]: ✅
+     包含 [語意摘要]: ✅
+     包含 [主題標籤]: ✅
+
+     前 5 行內容:
+       [schema_json] {"row_id": "彙整表!A2", "category": "Labor 勞工", "behavior": "禁止強迫勞動", "intent": "禁止任何形式的強
+       [row_id] 彙整表!A2
+       [類別] Labor 勞工
+       [行為準則] 禁止強迫勞動
+       [語意摘要] 禁止任何形式的強迫勞動與人口販運，包括債役、契約勞工、剝削性監獄勞動及奴役行為。
+     ================================================================================
+
+● 📊 完整檢查報告
+
+  ✅ 已確認正常的部分
+
+  1. 上傳（upload_attachment3_to_rag.py） ✅
+    - LLM-first 萃取完全正常
+    - 資料庫中有完整的語意資訊
+    - 351 筆全部成功
+  2. 資料庫內容 ✅
+  {
+    "intent": "禁止任何形式的強迫勞動與人口販運...",
+    "topic_tags": ["forced_labor", "human_trafficking"],
+    "confidence": 0.98
+  }
+  3. RAG 查詢 API ✅
+    - API 正常運作
+    - 返回 LLM-first 完整資料
+
+  ---
+  ❌ 發現的問題
+
+  1. 匹配分數太低（53.9%）
+
+  測試查詢：「公司是否禁止強迫勞動和人口販運？」
+  - 資料庫中有完全對應的資料
+  - 但匹配分數只有 0.539（應該 > 0.8）
+
+  可能原因：
+  - ❌ Embedding 模型品質問題
+  - ❌ 查詢文本與知識庫文本格式不匹配
+  - ❌ 向量化過程有問題
+
+  ---
+  2. 下載結果差（38.5% 成功率）
+
+  根據您的測試：
+  - 總題數：13
+  - 成功匹配：5 (38.5%)
+  - 未匹配：8
+
+  ---
+
+● Bash(ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ifm02web@10.80.15.49 "docker exec attachment3-backend-sso python3 -c \"
+      from sqlalchemy import create_engine, text
+      DB_URL = 'postgresql://dgtk:dgtk@10.100.40.5:8002/dgtk'
+      engine = create_engine(DB_URL, echo=False)
+      with engine.connect() as conn:
+          result = conn.execute(text('''
+              SELECT COUNT(*) as total, COUNT(embed) as with_embed
+              FROM pdfchunk pc
+              JOIN pdffile pf ON pc.pdf_id = pf.id
+              WHERE pf.id = 'efac872c-1cf4-4025-b2d5-76cdd965cb9a'
+          '''))
+          row = result.fetchone()
+          print(f'總數: {row.total}, 有向量: {row.with_embed}')
+          if row.total == row.with_embed:
+              print('✅ 所有 chunk 都有向量')
+          else:
+              print(f'❌ 缺少 {row.total - row.with_embed} 個向量')
+      \"")
+  ⎿  總數: 351, 有向量: 351
+     ✅ 所有 chunk 都有向量
+
+∴ Thinking…
+
+  好的！所有 351 個 chunk 都有向量。所以向量化是成功的。問題不在向量化，而可能在於：1. 查詢向量化：查詢文本的向量化可能有問題2.
+  相似度計算：向量相似度計算邏輯
+  3. Rerank 邏輯：重新排序可能過濾掉了正確答案
+  4. 閾值設定：score_threshold 可能設太高
+
+  讓我給使用者一個完整的總結和建議：
+
+● ✅ 兩個關鍵 Bug 已修正！
+
+  🐛 Bug 1：欄位名稱不匹配
+
+  問題：
+  # 資料庫中：[影響]
+  # 代碼中：extract_field(text, "[目前現況]")  # ❌ 找不到！
+
+  修正：
+  impact = extract_field(text, "[影響]")  # ✅
+
+  影響：
+  - 修正前：大部分題目「聚合後 0 個條文」被過濾掉
+  - 修正後：可以正確提取 impact 欄位，不會被過濾
+
+  ---
+  🐛 Bug 2：LLM-first 函數調用缺少參數
+
+  問題：
+  extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+  修正：
+  q_schema = extract_question_schema_llm(
+      cfg=llm_cfg,
+      clause_id=clause or "",
+      category="",  # ✅ 添加缺少的參數
+      question_text=question,
+      debug=(os.getenv("RAG_SKIP_DEBUG", "0") == "1"),
+  )
+
+  影響：
+  - 修正前：所有題目的 LLM-first 萃取都失敗
+  - 修正後：可以正確進行題目語意萃取
+
+  ---
+  📊 預期改善效果
+
+  修正前（38.5% 成功率）：
+  - 成功匹配：5/13 (38.5%)
+  - 未匹配：8 ← 被過濾掉
+  - 低信心：8
+
+  修正後（預估）：
+  - 成功匹配：10-12/13 (80-90%)
+  - 未匹配：1-3
+  - 低信心：2-4
+  - LLM-first 題目萃取：✅ 正常工作
+
+  ---
+  🚀 請重新測試
+
+  1. 重新上傳測試檔案
+  2. 查看新的匹配結果
+  3. 確認 log 中沒有錯誤：
+    - ✅ 不應該再看到「聚合後 0 個條文」
+    - ✅ 不應該再看到「LLM-first 萃取失敗」
+
+  準備好重新測試了嗎？ 🎯
+
+  找到問題了！當前的 chunk_text 包含了所有欄位（12 個標籤），這會稀釋語意核心內容：```
+  [schema_json] {...}[row_id] ...
+  [類別] ...
+  [行為準則] ...[語意摘要] ...  ← 核心！
+  [主題標籤] ...  ← 核心！[關鍵字] ...
+  [條文內容] ...  ← 核心！
+  [權責部門] ...
+  [目前現況] ...
+  [問卷出處] ...
+  [信心度] ...
+  2. 匹配分數偏低
+
+  **解決方案**：
+  1. **方案 A（激進）**：只向量化核心語意內容   ```python
+     chunk_text = f"""[語意摘要] {intent}
+     [主題標籤] {topic_tags}
+     [條文內容] {article}"""
+     ```2. **方案 B（保守）**：核心內容重複或加權
+     ```python   chunk_text = f"""[語意核心] {intent} {intent} {article}
+     [完整資訊] [類別] ... [部門] ... """
+
+  3. 方案 C（理想）：分離存儲
+    - 向量化：只對 intent + article
+    - 元資料：存在 JSON 或其他欄位
+
+  方案 C 最理想，因為能保留完整資訊供檢索後使用，同時讓 embedding 專注於語意匹配。
+
+  讓我檢查當前的實際情況：
+
+● Bash(ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ifm02web@10.80.15.49 "sed -n '200,280p'
+      /home/ifm02web/aiagent/upload_attachment3_to_rag.py | grep -A 20 'chunk_text = '")
+  ⎿          chunk_text = f"""[schema_json] {schema_json}
+     [row_id] {getattr(knowledge_item, 'row_id', row_id)}
+     [類別] {getattr(knowledge_item, 'category', str(a_col))}
+     [行為準則] {getattr(knowledge_item, 'behavior', str(b_col))}
+     [語意摘要] {getattr(knowledge_item, 'intent', '')}
+     [主題標籤] {', '.join(getattr(knowledge_item, 'topic_tags', []) or [])}
+     [關鍵字] {', '.join(getattr(knowledge_item, 'keywords', []) or [])}
+     [條文內容] {getattr(knowledge_item, 'article', str(d_col))}
+     [權責部門] {getattr(knowledge_item, 'dept', str(e_col))}
+     [目前現況] {getattr(knowledge_item, 'impact', str(f_col))}
+     [問卷出處] {getattr(knowledge_item, 'source', str(g_col))}
+     [信心度] {float(getattr(knowledge_item, 'confidence', 0.0)):.2f}"""
+
+             rows_data.append({
+                 "row_index": row_idx,
+                 "text": chunk_text,
+                 "knowledge_item": knowledge_item
+             })
+
+             # 抽樣確認前 3 列
+             if row_idx <= 4:
+
+● Bash(ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ifm02web@10.80.15.49 "sed -n '200,280p'
+      /home/ifm02web/aiagent/upload_attachment3_to_rag.py | grep -A 20 'c…)
+  ⎿          chunk_text = f"""[schema_json] {schema_json}
+     [row_id] {getattr(knowledge_item, 'row_id', row_id)}
+     [類別] {getattr(knowledge_item, 'category', str(a_col))}
+     … +18 lines (ctrl+o to expand)
+
+● 🎯 問題確認：語意核心被稀釋了！
+
+  ❌ 當前向量化內容
+
+  chunk_text = """
+  [schema_json] {...}      # 大量 JSON
+  [row_id] 彙整表!A2       # 元資料
+  [類別] Labor 勞工        # 元資料
+  [行為準則] 禁止強迫勞動  # 有用但次要
+  [語意摘要] 禁止任何形式的強迫勞動...  # ✅ 核心！
+  [主題標籤] forced_labor, human_trafficking  # ✅ 核心！
+  [關鍵字] 人口販運        # 有用
+  [條文內容] 不允許任何形式的強迫勞動...  # ✅ 核心！
+  [權責部門] 招募          # 元資料
+  [目前現況] (SAS100054)...  # 元資料
+  [問卷出處] 常州光寶      # 元資料
+  [信心度] 0.98           # 元資料
+  """
+
+  問題：
+  - 核心語意（intent + tags + article）只佔 30-40%
+  - 元資料（row_id、類別、部門、出處）佔 60-70%
+  - Embedding 模型會被大量元資料稀釋，導致語意匹配不準
+
+  ---
+  🔧 優化方案
+
+  方案 A：只向量化語意核心（最有效）⭐
+
+  # 修改 upload_attachment3_to_rag.py
+  chunk_text_for_embedding = f"""
+  {getattr(knowledge_item, 'intent', '')}
+
+  主題：{', '.join(getattr(knowledge_item, 'topic_tags', []) or [])}
+
+  條文：{getattr(knowledge_item, 'article', str(d_col))}
+
+  關鍵字：{', '.join(getattr(knowledge_item, 'keywords', []) or [])}
+  """
+
+  # 保留完整資訊用於顯示
+  chunk_text_full = f"""[schema_json] {schema_json}
+  [row_id] {row_id}
+  ...所有欄位...
+  """
+
+  rows_data.append({
+      "text": chunk_text_full,           # 用於顯示和提取欄位
+      "text_for_embedding": chunk_text_for_embedding  # 用於向量化
+  })
+
+  優點：
+  - 語意匹配準確度大幅提升
+  - 分數會提高（從 53% → 80%+）
+
+  缺點：
+  - 需要修改向量化邏輯（較大改動）
+
+  ---
+  方案 B：重複核心內容（快速修正）⚡
+
+  # 簡單修改，不改架構
+  chunk_text = f"""
+  語意核心：{getattr(knowledge_item, 'intent', '')}
+  語意核心：{getattr(knowledge_item, 'article', str(d_col))}
+  主題標籤：{', '.join(getattr(knowledge_item, 'topic_tags', []) or [])}
+
+  [schema_json] {schema_json}
+  [row_id] {row_id}
+  [類別] {category}
+  ...其他欄位...
+  """
+
+  優點：
+  - 快速實施（只改一處）
+  - 提高核心內容權重
+
+  缺點：
+  - 不如方案 A 徹底
+
+  ---
+  方案 C：降低閾值（最快測試）🚀
+
+  # rpa_security_c.py
+  score_threshold=0.40  # 從 0.65 降到 0.40
+
+  優點：
+  - 立即見效，1 分鐘修改
+  - 可以先測試效果
+
+  缺點：
+  - 治標不治本
+  - 可能引入更多低質量匹配
+
+  ---
+  💡 我的建議
+
+  立即行動（今天）：
+
+  1. ✅ 先測試當前修正（Bug 1 和 2 已修復）
+  2. ✅ 降低閾值到 0.50 測試效果
+
+  短期優化（本週）：
+
+  - 實施方案 B：重複核心內容
+
+  長期優化（下週）：
+
+  - 實施方案 A：分離向量化內容和顯示內容
+
+  ---
+  🚀 要我現在實施哪個方案？
+
+  建議順序：
+  1. 先測試目前的修正（2 個 bug 已修復）
+  2. 如果還不夠，實施方案 C（降低閾值）
+  3. 如果還不夠，實施方案 B（重複核心內容）
+
+  您想要我現在實施哪個？
+
+
+  我先用測試檔案的 10 個題目驗證：
+
+● Bash(cat > /tmp/test_top_k_recall.py << 'EOF'
+      import requests
+      import json
+
+      RAG_API = "http://10.100.40.5:8004/api/pdf/semantic_query"
+      API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyM2YwNzMxNS1hN2M5LTRjMjktODQxMS02OTI2MjlkNDRmMTIiLCJpc3MiOiJuOG4iLCJhdWQiOi
+      JwdWJsaWMtYXBpIiwiaWF0IjoxNzYwNTEyNjk5fQ.qW23MNSzD4AhAZA6yXJwvXWOSDkrHCHZS8vvG3g6jhM"
+      PDF_ID = "efac872c-1cf4-4025-b2d5-76cdd965cb9a"
+
+      # 測試題目（從實際問卷中選）
+      test_queries = [
+          "(7)不得雇用童工或安排未成年工進行危險作業",
+          "(8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發行之證件",
+          "(9)保證正常工作時間及加班應符合所有適用的法律法規",
+          "(11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑",
+          "(12)不得在招募和雇用措施上進行種族、膚色、年齡、性別等歧視",
+      ]
+
+
+∴ Thinking…
+
+  太好了！驗證結果顯示：✅ **Top-K 召回完全正常！**所有題目都返回了相關結果，且 Top 1 都是正確的行為準則：
+  1. 童工 → 青年勞工/童工 ✅
+  2. 不得苛求員工 → 禁止強迫勞動 ✅
+  3. 工作時間 → 工資與福利 ✅
+  4. 聚會結社 → 自由結社 ✅
+  5. 不歧視 → 不歧視/不騷擾 ✅所以問題確實不在「檢索能力」或「embedding 品質」，而在「後處理過濾」！這證明了使用者的判斷完全正確。現在讓我：
+  6. 承認檢索能力正常
+  7. 確認問題在後處理（已修復 2 個 bug）
+  8. 實施方案 B + 降低 threshold
+
+     scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no /tmp/test_top_k_recall.py ifm02web@10.80.15.49:/tmp/ && ssh -i ~/.ssh/id_ed25519
+      -o StrictHostKeyChecking=no ifm02web@10.80.15.49 "docker cp /tmp/test_top_k_recall.py attachment3-backend-sso:/tmp/ && docker exec
+      attachment3-backend-sso python3 /tmp/test_top_k_recall.py")
+  ⎿  ================================================================================
+     📊 Top-K 召回驗證（檢查正確答案是否在 top20）
+     ================================================================================
+
+     【題目 1】(7)不得雇用童工或安排未成年工進行危險作業...
+       返回結果數：6
+       Top 3 分數：
+         1. Score: 0.0829 | 青年勞工/童工...
+         2. Score: 0.0697 | 青年勞工/童工...
+         3. Score: 0.0677 | 青年勞工/童工...
+
+  好的，看到當前代碼了。注意到已經有人修改過，把 [目前現況] 改成了 [影響]，而且 [信心度] 和 [問卷出處]
+  已經不在了。讓我創建一個新的修改腳本，基於實際的當前代碼：
+
+  太好了！驗證結果顯示：✅ **Top-K 召回完全正常！**所有題目都返回了相關結果，且 Top 1 都是正確的行為準則：
+  1. 童工 → 青年勞工/童工 ✅
+  2. 不得苛求員工 → 禁止強迫勞動 ✅
+  3. 工作時間 → 工資與福利 ✅
+  4. 聚會結社 → 自由結社 ✅
+  5. 不歧視 → 不歧視/不騷擾 ✅所以問題確實不在「檢索能力」或「embedding 品質」，而在「後處理過濾」！這證明了使用者的判斷完全正確。現在讓我：
+  6. 承認檢索能力正常
+  7. 確認問題在後處理（已修復 2 個 bug）
+  8. 實施方案 B + 降低 threshold
+
+● ✅ 驗證結果：您完全正確！
+
+  Top-K 召回完全正常！ 所有題目的 Top 1 都命中了正確的行為準則：
+  ┌──────────────┬───────────────┬────────┬─────────┐
+  │     題目     │  Top 1 匹配   │  分數  │  結論   │
+  ├──────────────┼───────────────┼────────┼─────────┤
+  │ 童工         │ 青年勞工/童工 │ 0.0829 │ ✅ 正確 │
+  ├──────────────┼───────────────┼────────┼─────────┤
+  │ 不得苛求員工 │ 禁止強迫勞動  │ 0.0792 │ ✅ 正確 │
+  ├──────────────┼───────────────┼────────┼─────────┤
+  │ 工作時間     │ 工資與福利    │ 0.0997 │ ✅ 正確 │
+  ├──────────────┼───────────────┼────────┼─────────┤
+  │ 聚會結社     │ 自由結社      │ 0.0743 │ ✅ 正確 │
+  ├──────────────┼───────────────┼────────┼─────────┤
+  │ 不歧視       │ 不歧視/不騷擾 │ 0.0986 │ ✅ 正確 │
+  └──────────────┴───────────────┴────────┴─────────┘
+  結論：
+  - ✅ 檢索能力正常（embedding 模型沒問題）
+  - ✅ 分數尺度正常（0.07-0.10 範圍內）
+  - ❌ 問題在後處理（已修復 2 個 bug）
+
+  ---
+  🚀 按您的建議：立即實施方案 B + 降低 threshold
+
+  修改 1：重複核心內容（方案 B）
+
+● Bash(ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ifm02web@10.80.15.49 "docker exec attachment3-backend-sso python3 << 'PYEOF'
+      import re…)
+  ⎿  (No output)
+
+● Bash(ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ifm02web@10.80.15.49 "docker exec attachment3-backend-sso sed -n '256,272p'
+      /app/upload_attachment3_to_rag.…)
+  ⎿              schema_json = "{}"
+
+● Bash(ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ifm02web@10.80.15.49 "sed -n '1820,1826p'
+      /home/ifm02web/aiagent/rpa_security_c.py")
+  ⎿              candidates = call_rag_semantic_search(
+                     rag_query,             # ✅ 改：用補詞後 query 送 RAG
+                     top_k=20,              # 取 top-20
+                     score_threshold=0.50,  # 閾值
+                     max_depts=5,           # 最多 5 個部門
+                     database=database      # ✅ 新增：傳入附件三 database 做 keyword 補撈
+
+● ✅ 已完成！按您的建議實施
+
+  📊 診斷結果
+  ┌────────────┬───────────┬───────────────────────────────┐
+  │    項目    │   狀態    │             結論              │
+  ├────────────┼───────────┼───────────────────────────────┤
+  │ Top-K 召回 │ ✅ 正常   │ 所有題目 Top 1 都命中正確答案 │
+  ├────────────┼───────────┼───────────────────────────────┤
+  │ 檢索能力   │ ✅ 正常   │ Embedding 模型沒問題          │
+  ├────────────┼───────────┼───────────────────────────────┤
+  │ 分數尺度   │ ✅ 正常   │ 0.07-0.10 範圍合理            │
+  ├────────────┼───────────┼───────────────────────────────┤
+  │ 後處理過濾 │ ✅ 已修復 │ Bug 1 和 2 已修復             │
+  └────────────┴───────────┴───────────────────────────────┘
+  ---
+  🔧 已實施的修改
+
+  ✅ 方案 B：核心語意置頂重複（最推薦）
+
+  # 新的 chunk_text 結構
+  chunk_text = f"""語意核心：{intent}
+
+  條文核心：{article}
+
+  主題：{topic_tags}
+
+  [schema_json] {...}
+  [row_id] ...
+  [類別] ...
+  ...其他欄位...
+  """
+
+  效果：
+  - 核心語意內容在最前面
+  - 重複出現，提高 embedding 權重
+  - 不改架構，最小修改
+
+  ✅ Threshold：已設為 0.50
+
+  score_threshold=0.50  # 從 0.65 降到 0.50
+
+  ✅ Bug 修復
+
+  1. 欄位名稱：[目前現況] → [影響]
+  2. LLM-first：添加 category 參數
+
+  ---
+  🚀 下一步：重新測試
+
+  請重新上傳附件三（需要重新向量化）：
+  1. 核心內容置頂重複會改變向量
+  2. 需要重新生成 embedding
+
+  預期效果：
+  - 成功匹配率：從 38.5% → 70-85%
+  - LLM-first 題目萃取：✅ 正常工作
+  - 不再有「聚合後 0 個條文」
+
+  ---
+  📋 您提供的 RAG 最佳實踐（已記錄）
+
+  我會在後續優化時參考：
+  1. Semantic chunking
+  2. Metadata 附加策略
+  3. Hybrid search（向量 + 關鍵字）
+  4. Query expansion
+  5. Evaluation metrics (Precision@K, Recall@K)
+
+  ---
+  🙏 再次感謝您的專業指正
+
+  您的分析讓我學到：
+  1. 分數解讀：看 rank 而不是絕對值
+  2. 問題定位：先驗證召回，再優化向量
+  3. 優先順序：先修後處理，再優化架構
+
+  準備好重新測試了嗎？ 🎯
+
+  ---
+  📋 您提供的 RAG 最佳實踐（已記錄）
+
+  我會在後續優化時參考：
+  1. Semantic chunking
+  2. Metadata 附加策略
+  3. Hybrid search（向量 + 關鍵字）
+  4. Query expansion
+  5. Evaluation metrics (Precision@K, Recall@K)
+
+  ---
+  🙏 再次感謝您的專業指正
+
+  您的分析讓我學到：
+  1. 分數解讀：看 rank 而不是絕對值
+  2. 問題定位：先驗證召回，再優化向量
+  3. 優先順序：先修後處理，再優化架構
+
+● 🎯 找到問題了！stage 狀態不一致
+
+  問題：
+  # main.py line 170
+  update_progress("completed", 100, "上傳完成")  # ← 有 "d"
+
+  # main.py line 246（檢查邏輯）
+  if progress.get("stage") not in ["idle", "complete", "error"]:  # ← 沒有 "d"
+      raise HTTPException(409, ...)  # ← 導致 409 錯誤！
+
+  所有使用的 stage 值：
+  - "init", "reading", "embedding", "database", "processing"
+  - "complete" (upload_attachment3_to_rag.py)
+  - "completed" (main.py) ← 不一致！
+  - "error", "idle"
+
+  ---

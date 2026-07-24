@@ -1,0 +1,37 @@
+networks:
+  attachment3-network-sso:
+    driver: bridge
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: attachment3-backend-sso
+    init: true
+    environment:
+    - DB_URL=postgresql://dgtk:dgtk@10.100.40.5:8002/dgtk
+    - EMBED_API=http://10.100.40.5:8004/api/embed
+    - FRONTEND_URL=https://ssw01.ennostar.com/esg/upload/
+    - AZURE_OPENAI_ENDPOINT=https://en-openai01.openai.azure.com
+    - AZURE_OPENAI_KEY=1xPk95hy7EROtFp4yytQD6jrb237tGuewf0vGuMWExcbAr1TSgjUJQQJ99BFACHYHv6XJ3w3AAABACOGdXkj
+    - AZURE_OPENAI_DEPLOYMENT=gpt-5-chat
+    - AZURE_OPENAI_API_VERSION=2024-12-01-preview
+    networks:
+    - attachment3-network-sso
+    ports:
+    - 8001:8000
+    restart: unless-stopped
+    volumes:
+    - ./backend:/app
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: attachment3-frontend-sso
+    depends_on:
+    - backend
+    networks:
+    - attachment3-network-sso
+    ports:
+    - 4203:80
+    restart: unless-stopped

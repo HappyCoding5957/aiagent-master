@@ -1,0 +1,267 @@
+#!/usr/bin/env python3
+import requests
+# -*- coding: utf-8 -*-
+"""
+ESG Portal 反向代理服務器
+監聽 4202 port，提供統一入口
+- /esg/upload/  -> 代理到 4203 (上傳系統前端)
+- /esg/download/ -> 代理到 4204 (下載系統)
+- /api/upload, /api/delete, /api/progress, /api/status -> 代理到 8001 (上傳系統後端 API)
+- /api/* (其他) -> 代理到 4204 (下載系統 API)
+- /callback -> 代理到 4204 (SSO callback)
+- /logout_callback -> 代理到 4204 (SSO logout callback)
+"""
+
+from flask import Flask, request, Response, redirect
+
+app = Flask(__name__)
+
+# 後端服務配置
+UPLOAD_BACKEND = "http://127.0.0.1:8001"         # 上傳系統（FastAPI，原 4203 Docker 已停用）
+UPLOAD_API_BACKEND = "http://127.0.0.1:8001"    # 上傳系統後端 API（FastAPI）
+DOWNLOAD_BACKEND = "http://127.0.0.1:8002"      # 下載系統（Flask SSO）
+PADDLEOCR_BACKEND = "http://127.0.0.1:8095"      # PaddleOCR 服務
+AI_AGENT_HUB_BACKEND = "http://10.100.40.5:8010"      # AI Agent Hub (本地 FastAPI)
+
+
+def proxy_request(backend_url, path):
+    """反向代理核心函數"""
+    # 組合完整 URL
+    url = f"{backend_url.rstrip('/')}{path}"
+    
+    # 複製請求參數
+    params = request.args.to_dict()
+    
+    # 複製請求頭（移除 Host）
+    headers = {key: value for key, value in request.headers if key.lower() != 'host'}
+    
+    # 複製請求 body
+    data = request.get_data()
+    
+    # 發送代理請求
+    try:
+        resp = requests.request(
+            method=request.method,
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+            cookies=request.cookies,
+            allow_redirects=False,
+            timeout=900,
+            stream=True
+        )
+        
+        # 複製回應頭
+        excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+        response_headers = [
+            (name, value) for name, value in resp.raw.headers.items()
+            if name.lower() not in excluded_headers
+        ]
+        
+        # 處理重定向（修正 Location header）
+        location = resp.headers.get('Location')
+        if location:
+            # [PROXY][PRINT-LOC-1][上面]
+            print(f"[PROXY][PRINT-LOC-1][上面] in_path={request.path} raw_location={location}")
+
+            # ① 內部絕對 URL → 外部可用 URL
+            if UPLOAD_BACKEND in location:
+                location = location.replace(UPLOAD_BACKEND, 'https://ssw01.ennostar.com/esg/upload')
+            elif DOWNLOAD_BACKEND in location:
+                location = location.replace(DOWNLOAD_BACKEND, 'https://ssw01.ennostar.com/esg/download')
+            elif PADDLEOCR_BACKEND in location:
+                location = location.replace(PADDLEOCR_BACKEND, 'https://ssw01.ennostar.com')
+            elif AI_AGENT_HUB_BACKEND in location:
+                location = location.replace(AI_AGENT_HUB_BACKEND, 'https://ssw01.ennostar.com/ai-agent-hub')
+
+            # ② PaddleOCR 流量：修正「根路徑 callback」掉回 aiagent 的問題
+            if request.path.startswith("/paddleocr/"):
+                # 後端若回 /callback，強制改走 PaddleOCR 專用 callback
+                if location == "/callback":
+                    location = "/paddleocr_callback"
+                elif location == "/logout_callback":
+                    location = "/paddleocr_logout_callback"
+
+                # 避免 Location="/" 被 proxy index 送去 /esg/upload/
+                if location == "/":
+                    location = "/paddleocr/query/"
+
+            # 更新 Location header
+            response_headers = [(name, value) for name, value in response_headers if name.lower() != 'location']
+            response_headers.append(('Location', location))
+
+            # [PROXY][PRINT-LOC-2][下面]
+            print(f"[PROXY][PRINT-LOC-2][下面] rewritten_location={location}")
+        
+        # 建立回應
+        response = Response(resp.content, resp.status_code, response_headers)
+        
+        return response
+        
+    except Exception as e:
+        print(f"[PROXY ERROR] {e}")
+        return Response(f"Proxy Error: {str(e)}", status=502)
+
+
+@app.route('/')
+def index():
+    """首頁：重定向到上傳頁面"""
+    return redirect('/esg/upload/', code=302)
+
+
+@app.route('/docs/assets/<path:path>')
+def docs_assets_proxy(path):
+    """代理靜態資源到下載系統"""
+    return proxy_request(DOWNLOAD_BACKEND, f"/docs/assets/{path}")
+
+
+@app.route('/assets/<path:path>')
+def assets_proxy(path):
+    """上傳系統靜態資源代理（根路徑 /assets/）"""
+    return proxy_request(UPLOAD_BACKEND, f"/assets/{path}")
+
+# ========== ESG Upload Logout 特殊處理 ==========
+@app.route("/esg/upload/api/logout", methods=["GET"])
+def esg_upload_logout_proxy():
+    """ESG Upload 登出：轉發到下載系統 (4204) 統一處理"""
+    return proxy_request(DOWNLOAD_BACKEND, "/api/logout")
+
+
+@app.route('/esg/upload/', defaults={'path': ''}, methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+@app.route('/esg/upload/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+def upload_proxy(path):
+    """上傳系統反向代理"""
+    request_path = f"/esg/upload/{path}" if path else "/esg/upload/"
+    return proxy_request(UPLOAD_BACKEND, request_path)
+
+
+@app.route("/favicon.ico")
+def proxy_favicon():
+    """轉發 favicon 到 Flask"""
+    response = requests.get(DOWNLOAD_BACKEND + "/favicon.ico")
+    return Response(response.content, mimetype="image/x-icon")
+
+@app.route('/esg/download/', defaults={'path': ''})
+@app.route('/esg/download/<path:path>')
+def download_proxy(path):
+    """下載系統反向代理"""
+    request_path = f"/esg/download/{path}" if path else "/esg/download/"
+    return proxy_request(DOWNLOAD_BACKEND, request_path)
+
+
+
+
+
+@app.route('/paddleocr/query/', defaults={'path': ''}, methods=['GET', 'POST'])
+@app.route('/paddleocr/query/<path:path>', methods=['GET', 'POST'])
+def paddleocr_proxy(path):
+    """PaddleOCR 反向代理"""
+    request_path = f"/paddleocr/query/{path}" if path else "/paddleocr/query/"
+    return proxy_request(PADDLEOCR_BACKEND, request_path)
+
+
+# PaddleOCR 專用 SSO 路由（獨立，不與 aiagent 衝突）
+@app.route('/paddleocr_login', methods=['GET', 'POST'])
+def paddleocr_login_proxy():
+    """PaddleOCR 登入路由"""
+    return proxy_request(PADDLEOCR_BACKEND, "/paddleocr/query/login")
+
+
+@app.route('/paddleocr_callback', methods=['GET', 'POST'])
+def paddleocr_callback_proxy():
+    """PaddleOCR SSO Callback 路由"""
+    return proxy_request(PADDLEOCR_BACKEND, "/paddleocr/query/callback")
+
+
+@app.route('/paddleocr_logout_callback', methods=['GET'])
+def paddleocr_logout_callback_proxy():
+    """PaddleOCR 登出 Callback 路由"""
+    return proxy_request(PADDLEOCR_BACKEND, "/paddleocr/query/logout_callback")
+
+@app.route('/login', methods=['GET', 'POST'])
+def login_proxy():
+    """登入頁面反向代理（導向下載系統）"""
+    return proxy_request(DOWNLOAD_BACKEND, "/login")
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout_proxy():
+    """登出反向代理（導向下載系統）"""
+    return proxy_request(DOWNLOAD_BACKEND, "/logout")
+
+
+@app.route('/callback', methods=['GET', 'POST'])
+def callback_proxy():
+    """SSO Callback 反向代理（導向下載系統）"""
+    return proxy_request(DOWNLOAD_BACKEND, "/callback")
+
+
+@app.route('/logout_callback', methods=['GET'])
+def logout_callback_proxy():
+    """SSO Logout Callback 反向代理（導向下載系統）"""
+    return proxy_request(DOWNLOAD_BACKEND, "/logout_callback")
+
+
+# ✅ 上傳系統專用 API 路由（導向 8001 FastAPI）
+@app.route('/api/upload', methods=['POST'])
+def api_upload_proxy():
+    """附件三上傳 API（導向上傳系統後端）"""
+    return proxy_request(UPLOAD_API_BACKEND, "/api/upload")
+
+
+@app.route('/api/delete', methods=['DELETE'])
+def api_delete_proxy():
+    """附件三刪除 API（導向上傳系統後端）"""
+    return proxy_request(UPLOAD_API_BACKEND, "/api/delete")
+
+
+@app.route('/api/progress', methods=['GET'])
+def api_progress_proxy():
+    """上傳進度 API（導向上傳系統後端）"""
+    return proxy_request(UPLOAD_API_BACKEND, "/api/progress")
+
+
+@app.route('/api/status', methods=['GET'])
+def api_status_proxy():
+    """知識庫狀態 API（導向上傳系統後端）"""
+    return proxy_request(UPLOAD_API_BACKEND, "/api/status")
+
+
+# ✅ 其他 API 路由（導向下載系統）
+@app.route('/api/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def api_proxy(path):
+    """其他 API 請求代理（導向下載系統）"""
+    return proxy_request(DOWNLOAD_BACKEND, f"/api/{path}")
+
+
+
+
+# ========== AI Agent Hub 反向代理 ==========
+@app.route('/ai-agent-hub/', defaults={'path': ''}, methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'])
+@app.route('/ai-agent-hub/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'])
+def ai_agent_hub_proxy(path):
+    """AI Agent Hub 反向代理（10.100.40.5:8010）
+    路徑轉換: /ai-agent-hub/<path> -> /<path>
+    SSO cookies 由瀏覽器自動帶入，Hub 自行驗證。
+    """
+    request_path = f"/{path}" if path else "/"
+    return proxy_request(AI_AGENT_HUB_BACKEND, request_path)
+
+if __name__ == '__main__':
+    print("="  * 80)
+    print("ESG Portal 反向代理服務器啟動中")
+    print("="  * 80)
+    print("監聽 Port: 4202")
+    print("路由配置:")
+    print("  / → /esg/upload/ (重定向)")
+    print("  /esg/upload/ → 4203 (上傳系統前端)")
+    print("  /esg/download/ → 4204 (下載系統)")
+    print("  /paddleocr/query/ → 8095 (PaddleOCR 服務)")
+    print("  /api/upload, /api/delete, /api/progress, /api/status → 8001 (上傳 API)")
+    print("  /api/* (其他) → 4204 (下載 API)")
+    print("  /callback → 4204 (SSO)")
+    print("  /logout_callback → 4204 (SSO Logout)")
+    print("="  * 80)
+    
+    app.run(host='0.0.0.0', port=4202, debug=False)

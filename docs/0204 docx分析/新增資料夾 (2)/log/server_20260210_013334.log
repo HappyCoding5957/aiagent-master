@@ -1,0 +1,2008 @@
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Serving Flask app 'server'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:4204
+ * Running on http://10.80.15.49:4204
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+127.0.0.1 - - [10/Feb/2026 09:43:13] "GET /api/status HTTP/1.1" 401 -
+10.80.15.49 - - [10/Feb/2026 09:43:19] "GET /api/status HTTP/1.1" 401 -
+127.0.0.1 - - [10/Feb/2026 09:43:59] "GET /login HTTP/1.1" 302 -
+127.0.0.1 - - [10/Feb/2026 09:44:00] "POST /callback HTTP/1.1" 302 -
+127.0.0.1 - - [10/Feb/2026 09:44:03] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:03] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 09:44:03] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 09:44:03] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 09:44:03] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 09:44:05] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:05] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:05] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:05] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:05] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:06] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:07] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:07] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:07] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:07] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:07] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:08] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:13] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:44:13] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:13] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:44:13] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:44] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:52:44] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:44] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:44] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:44] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:46] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:58] "GET /esg/download/ HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1478, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1458, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/ifm02web/aiagent/sso.py", line 199, in decorated_function
+    return f(*args, **kwargs)
+  File "/home/ifm02web/aiagent/server.py", line 101, in download_index
+    return send_file("test_upload.html")
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/flask/helpers.py", line 501, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+  File "/home/ifm02web/.local/lib/python3.10/site-packages/werkzeug/utils.py", line 421, in send_file
+    stat = os.stat(path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ifm02web/aiagent/test_upload.html'
+127.0.0.1 - - [10/Feb/2026 09:52:58] "GET /esg/download/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:58] "GET /esg/download/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:52:58] "GET /esg/download/?__debugger__=yes&cmd=resource&f=console.png&s=r1xgxtC0pzoXVJuCzqPm HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:54:01] "GET /esg/download/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 09:54:01] "GET /docs/assets/logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 09:54:01] "GET /docs/assets/sop-1.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:54:01] "GET /docs/assets/header_bg.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:54:08] "GET /esg/download/ HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:54:08] "GET /docs/assets/sop-1.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:54:08] "GET /docs/assets/logo.svg HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 09:54:08] "GET /docs/assets/header_bg.png HTTP/1.1" 304 -
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SSO][PRINT-1] Login 請求 - path=/login, next_arg=N/A, resolved_next=/
+[SSO][PRINT-1-2] set sso_next_path=/
+[SSO][PRINT-2] callback state= cookie_next=/
+[SSO][PRINT-3] callback redirect_to=/
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+127.0.0.1 - - [10/Feb/2026 11:26:07] "GET /esg/download/ HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:26:07] "GET /docs/assets/logo.svg HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:26:07] "GET /docs/assets/header_bg.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:26:07] "GET /docs/assets/sop-1.png HTTP/1.1" 304 -
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SSO] 用戶存取 Download 頁面
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+127.0.0.1 - - [10/Feb/2026 11:44:05] "GET /esg/download/ HTTP/1.1" 302 -
+127.0.0.1 - - [10/Feb/2026 11:44:06] "POST /callback HTTP/1.1" 302 -
+127.0.0.1 - - [10/Feb/2026 11:44:06] "GET /esg/download/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 11:44:06] "GET /docs/assets/logo.svg HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:44:06] "GET /docs/assets/sop-1.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:44:06] "GET /docs/assets/header_bg.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:44:19] "GET /esg/download/ HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:44:19] "GET /docs/assets/logo.svg HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:44:19] "GET /docs/assets/header_bg.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:44:19] "GET /docs/assets/sop-1.png HTTP/1.1" 304 -
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SSO][PRINT-1] Login 請求 - path=/esg/download/, next_arg=N/A, resolved_next=/esg/download/
+[SSO][PRINT-1-2] set sso_next_path=/esg/download/
+[SSO][PRINT-2] callback state= cookie_next=/esg/download/
+[SSO][PRINT-3] callback redirect_to=/esg/download/
+[SSO] 用戶存取 Download 頁面
+[SSO] 用戶存取 Download 頁面
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+127.0.0.1 - - [10/Feb/2026 11:48:37] "GET /esg/download/ HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:48:37] "GET /docs/assets/logo.svg HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:48:37] "GET /docs/assets/sop-1.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 11:48:37] "GET /docs/assets/header_bg.png HTTP/1.1" 304 -
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SSO] 用戶存取 Download 頁面
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SECURITY_C] 用戶 Frank Fu 傅士軒 (2508105) 發起問卷比對
+[SECURITY_C] 收到請求 payload keys: ['file_base64', 'client_name']
+[SECURITY_C] 客戶名稱: 未指定客戶
+[SECURITY_C] file_base64 長度 = 14216
+[SECURITY_C] 已儲存附件2暫存檔: /home/ifm02web/aiagent/security_c_uploads/survey_input_85171232.xlsx
+[SECURITY_C] 準備開始比對
+[SECURITY_C]   - 問卷檔案: /home/ifm02web/aiagent/security_c_uploads/survey_input_85171232.xlsx
+[SECURITY_C]   - 資料庫: /home/ifm02web/aiagent/附件三.xlsx
+
+================================================================================
+[問卷處理] 開始處理問卷
+================================================================================
+[LLM-first] ✅ 配置成功: https://en-openai01.openai.azure.com/gpt-5-chat
+
+[資料庫載入] 開始讀取: /home/ifm02web/aiagent/附件三.xlsx
+[資料庫載入] 工作表名稱: 彙整表
+[資料庫載入] 最大行數: 2009
+[資料庫載入] 成功載入 2008 筆資料
+[資料庫載入] 彙整版資料: 0 筆
+
+[問卷載入] 開始讀取: /home/ifm02web/aiagent/security_c_uploads/survey_input_85171232.xlsx
+[問卷載入] 工作表名稱: Sheet1
+[問卷載入] 最大行數: 15
+
+[比對開始] 準備處理題目...
+[print-SK0][下面] clause index built=0
+[LLM-first] ⚠️  row=4 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 4] (7)不得雇用童工或安排未成年工進行危險作業...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (7)不得雇用童工或安排未成年工進行危險作業...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 16 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 88.0
+    - 行為準則: 工傷和職業病
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 88.0 ≥ 70，標記為綠色
+[LLM-first] ⚠️  row=5 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 5] (8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發行之證件，不得要求員工繳納保證金或任何其...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 5 個條文
+    [0] score=0.082, 匹配數=1, 條文=僱主、勞務代理和其附屬機構不得持有或以其他方式銷毀、隱藏或沒收身份或移民檔，例如...
+    [1] score=0.081, 匹配數=1, 條文=僱主、勞務代理和其附屬機構不得持有或以其他方式銷毀、隱藏或沒收身份或移民檔，例如...
+    [2] score=0.080, 匹配數=1, 條文=貴公司是否有政策確保所有員工皆達當地法定最低工作年齡，並遵守所有學生／學徒／實習...
+  ✓ RAG 匹配成功 | 相似度分數: 8.2
+    - 行為準則: 禁止強迫勞動
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (8.2 < 55)，標記為紅色待人工確認
+[LLM-first] ⚠️  row=6 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 6] (9)保證正常工作時間及加班應符合所有適用的法律法規...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (9)保證正常工作時間及加班應符合所有適用的法律法規...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 5 個條文
+    [0] score=0.099, 匹配數=1, 條文=支付給勞工的薪酬應符合所有適用的工資法，包括與最低工資、加班時間和法定福利相關的...
+    [1] score=0.095, 匹配數=1, 條文=支付給勞工的薪酬應符合所有適用的工資法，包括與最低工資、加班時間和法定福利相關的...
+    [2] score=0.094, 匹配數=1, 條文=支付給勞工的薪酬應符合所有適用的工資法，包括與最低工資、加班時間和法定福利相關的...
+  ✓ RAG 匹配成功 | 相似度分數: 9.9
+    - 行為準則: 工資與福利
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (9.9 < 55)，標記為紅色待人工確認
+[LLM-first] ⚠️  row=8 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 8] (11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 5 個條文
+    [0] score=0.074, 匹配數=1, 條文=結社自由
+符合當地法規下，應尊重所有工人組織和參加自己選擇的工會/工人代表組織、...
+    [1] score=0.071, 匹配數=1, 條文=貴公司是否有政策確保員工依法享有結社自由、集體談判權及加入工會的權利？...
+    [2] score=0.068, 匹配數=1, 條文=由公司或人力仲介（勞務仲介）所提供之工人宿舍，須維持清潔及安全，並設有適當的逃生...
+  ✓ RAG 匹配成功 | 相似度分數: 7.4
+    - 行為準則: 自由結社
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (7.4 < 55)，標記為紅色待人工確認
+[LLM-first] ⚠️  row=9 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 9] (12)不得在招募和雇用措施上進行種族、膚色、年齡、性別、性取向、民族、殘疾、懷孕、宗教、黨派、工會...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (12)不得在招募和雇用措施上進行種族、膚色、年齡、性別、性...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 5 個條文
+    [0] score=0.974, 匹配數=1, 條文=公司不得在招聘和就業作為（如工資、升遷、獎勵和培訓機會）中基於種族、膚色、年齡、...
+    [1] score=0.974, 匹配數=1, 條文=公司不得在招聘和就業作為（如工資、升遷、獎勵和培訓機會）中基於種族、膚色、年齡、...
+    [2] score=0.974, 匹配數=1, 條文=公司不得在招聘和就業作為（如工資、升遷、獎勵和培訓機會）中基於種族、膚色、年齡、...
+  ✓ RAG 匹配成功 | 相似度分數: 97.4
+    - 行為準則: 不歧視/不騷擾/
+人道待遇
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 97.4 ≥ 70，標記為綠色
+[LLM-first] ⚠️  row=10 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+127.0.0.1 - - [10/Feb/2026 13:31:46] "POST /api/security-c/match-from-base64 HTTP/1.1" 200 -
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+
+[題目 10] (3)為員工提供健康、安全的工作環境，並在危險工作區及有害物質、危險商品上設置醒目標識...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (3)為員工提供健康、安全的工作環境，並在危險工作區及有害物...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 16 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 88.0
+    - 行為準則: 工傷和職業病
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 88.0 ≥ 70，標記為綠色
+[LLM-first] ⚠️  row=11 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 11] (4)定期評估健康、環境安全風險並制訂控制潛在或預期風險的相關措施...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (4)定期評估健康、環境安全風險並制訂控制潛在或預期風險的相...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 6 個條文
+    [0] score=0.086, 匹配數=1, 條文=持續改善目標
+制定書面績效目標與計畫，持續改善社會、環境及職安衛績效，並定期評估...
+    [1] score=0.086, 匹配數=1, 條文=制定充分且有效的健康與安全管理績效考核和持續改進流程、健康與安全自我評估流程（以...
+    [2] score=0.085, 匹配數=1, 條文=制定充分且有效的健康與安全管理績效考核和持續改進流程、健康與安全自我評估流程（以...
+  ✓ RAG 匹配成功 | 相似度分數: 8.6
+    - 行為準則: 健康安全績效考核和
+持續改進
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (8.6 < 55)，標記為紅色待人工確認
+[LLM-first] ⚠️  row=12 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 12] (2)向買方提交ISO14001證書或明確的環境治理方案...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (2)向買方提交ISO14001證書或明確的環境治理方案...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 6 個條文
+    [0] score=0.096, 匹配數=1, 條文=貴公司是否已建立環境管理系統？是否獲得ISO 14001等外部認證？（如有其他相...
+    [1] score=0.086, 匹配數=1, 條文=公司是否通過ISO 14001 或環境相關管理系統，且證書於有效期限內? 若是，...
+    [2] score=0.084, 匹配數=1, 條文=貴公司是否建立職業安全衛生管理系統？如有，是否取得ISO 45001等認證？...
+  ✓ RAG 匹配成功 | 相似度分數: 8.6
+    - 行為準則: Environmental Management 環境管理
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (8.6 < 55)，標記為紅色待人工確認
+[LLM-first] ⚠️  row=13 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 13] (1)在商業活動中遵守所有適用的法令與商業道德，不得參與不正當競爭...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (1)在商業活動中遵守所有適用的法令與商業道德，不得參與不正...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 6 個條文
+    [0] score=0.085, 匹配數=1, 條文=商業誠信
+所有商業/業務往來須維持最高誠信標準，嚴禁任何形式的賄賂、貪污、勒索及...
+    [1] score=0.084, 匹配數=1, 條文=商業誠信
+所有商業/業務往來須維持最高誠信標準，嚴禁任何形式的賄賂、貪污、勒索及...
+    [2] score=0.083, 匹配數=1, 條文=公平競爭、廣告與商業
+必須維持公平競爭、行銷與商業標準，未透過攻擊、不道德方式進...
+  ✓ RAG 匹配成功 | 相似度分數: 8.3
+    - 行為準則: 公平交易 / 公平競爭
+廣告和競爭
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (8.3 < 55)，標記為紅色待人工確認
+[LLM-first] ⚠️  row=14 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 14] (13)不參與非法競爭和腐敗活動，並遵守智慧財產權法律...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (13)不參與非法競爭和腐敗活動，並遵守智慧財產權法律...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: 1ea263d2-3660-41b4-bde2-45a0288b7a63
+  [RAG] 聚合後 5 個條文
+    [0] score=0.087, 匹配數=1, 條文=智慧財產權
+應尊重智慧財產權，技術與專業知識轉移須保護智慧財產權，並妥善保護客戶...
+    [1] score=0.087, 匹配數=1, 條文=智慧財產權
+應尊重智慧財產權，技術與專業知識轉移須保護智慧財產權，並妥善保護客戶...
+    [2] score=0.087, 匹配數=1, 條文=智慧財產權
+應尊重智慧財產權，技術與專業知識轉移須保護智慧財產權，並妥善保護客戶...
+  ✓ RAG 匹配成功 | 相似度分數: 8.7
+    - 行為準則: 智慧財產
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (8.7 < 55)，標記為紅色待人工確認
+
+[儲存完成] 輸出檔案: /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_133146.xlsx
+
+================================================================================
+[處理摘要]
+  總題數: 13
+  成功匹配: 13 (100.0%)
+  未匹配: 0
+  低信心題目: 7
+================================================================================
+[SECURITY_C] 比對完成, 輸出檔案路徑 = /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_133146.xlsx
+[SECURITY_C] 回傳結果檔案: security_c_result_20260210_133146.xlsx
+[SECURITY_C]   - 檔案大小: 7966 bytes
+[SECURITY_C]   - 總題數: 13
+[SECURITY_C]   - 成功匹配: 13
+[SECURITY_C]   - 低信心題目: 7
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+127.0.0.1 - - [10/Feb/2026 13:49:17] "GET /login?next=/esg/upload/ HTTP/1.1" 302 -
+127.0.0.1 - - [10/Feb/2026 13:49:17] "POST /callback HTTP/1.1" 302 -
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SSO][PRINT-1] Login 請求 - path=/login, next_arg=/esg/upload/, resolved_next=/esg/upload/
+[SSO][PRINT-1-2] set sso_next_path=/esg/upload/
+[SSO][PRINT-2] callback state= cookie_next=/esg/upload/
+[SSO][PRINT-3] callback redirect_to=/esg/upload/
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SECURITY_C] 用戶 Frank Fu 傅士軒 (2508105) 發起問卷比對
+[SECURITY_C] 收到請求 payload keys: ['file_base64', 'client_name']
+[SECURITY_C] 客戶名稱: 未指定客戶
+[SECURITY_C] file_base64 長度 = 14216
+[SECURITY_C] 已儲存附件2暫存檔: /home/ifm02web/aiagent/security_c_uploads/survey_input_9d0aa3cd.xlsx
+[SECURITY_C] 準備開始比對
+[SECURITY_C]   - 問卷檔案: /home/ifm02web/aiagent/security_c_uploads/survey_input_9d0aa3cd.xlsx
+[SECURITY_C]   - 資料庫: /home/ifm02web/aiagent/附件三.xlsx
+
+================================================================================
+[問卷處理] 開始處理問卷
+================================================================================
+[LLM-first] ✅ 配置成功: https://en-openai01.openai.azure.com/gpt-5-chat
+
+[資料庫載入] 開始讀取: /home/ifm02web/aiagent/附件三.xlsx
+[資料庫載入] 工作表名稱: 彙整表
+[資料庫載入] 最大行數: 2009
+[資料庫載入] 成功載入 2008 筆資料
+[資料庫載入] 彙整版資料: 0 筆
+
+[問卷載入] 開始讀取: /home/ifm02web/aiagent/security_c_uploads/survey_input_9d0aa3cd.xlsx
+[問卷載入] 工作表名稱: Sheet1
+[問卷載入] 最大行數: 15
+
+[比對開始] 準備處理題目...
+[print-SK0][下面] clause index built=0
+[LLM-first] ⚠️  row=4 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 4] (7)不得雇用童工或安排未成年工進行危險作業...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (7)不得雇用童工或安排未成年工進行危險作業...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 10 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 88.0
+    - 行為準則: 工傷和職業病
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 88.0 ≥ 70，標記為綠色
+[LLM-first] ⚠️  row=5 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 5] (8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發行之證件，不得要求員工繳納保證金或任何其...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=6 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 6] (9)保證正常工作時間及加班應符合所有適用的法律法規...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (9)保證正常工作時間及加班應符合所有適用的法律法規...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=8 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 8] (11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=9 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 9] (12)不得在招募和雇用措施上進行種族、膚色、年齡、性別、性取向、民族、殘疾、懷孕、宗教、黨派、工會...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (12)不得在招募和雇用措施上進行種族、膚色、年齡、性別、性...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=10 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 10] (3)為員工提供健康、安全的工作環境，並在危險工作區及有害物質、危險商品上設置醒目標識...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (3)為員工提供健康、安全的工作環境，並在危險工作區及有害物...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 10 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 88.0
+    - 行為準則: 工傷和職業病
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 88.0 ≥ 70，標記為綠色
+[LLM-first] ⚠️  row=11 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 11] (4)定期評估健康、環境安全風險並制訂控制潛在或預期風險的相關措施...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (4)定期評估健康、環境安全風險並制訂控制潛在或預期風險的相...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=12 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 12] (2)向買方提交ISO14001證書或明確的環境治理方案...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (2)向買方提交ISO14001證書或明確的環境治理方案...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=13 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 13] (1)在商業活動中遵守所有適用的法令與商業道德，不得參與不正當競爭...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (1)在商業活動中遵守所有適用的法令與商業道德，不得參與不正...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+127.0.0.1 - - [10/Feb/2026 14:32:14] "POST /api/security-c/match-from-base64 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Feb/2026 14:47:15] "GET /esg/download/ HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 14:47:15] "GET /docs/assets/header_bg.png HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 14:47:15] "GET /docs/assets/logo.svg HTTP/1.1" 304 -
+127.0.0.1 - - [10/Feb/2026 14:47:15] "GET /docs/assets/sop-1.png HTTP/1.1" 304 -
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=14 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 14] (13)不參與非法競爭和腐敗活動，並遵守智慧財產權法律...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (13)不參與非法競爭和腐敗活動，並遵守智慧財產權法律...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+
+[儲存完成] 輸出檔案: /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_143214.xlsx
+
+================================================================================
+[處理摘要]
+  總題數: 13
+  成功匹配: 5 (38.5%)
+  未匹配: 8
+  低信心題目: 8
+================================================================================
+[SECURITY_C] 比對完成, 輸出檔案路徑 = /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_143214.xlsx
+[SECURITY_C] 回傳結果檔案: security_c_result_20260210_143214.xlsx
+[SECURITY_C]   - 檔案大小: 7006 bytes
+[SECURITY_C]   - 總題數: 13
+[SECURITY_C]   - 成功匹配: 5
+[SECURITY_C]   - 低信心題目: 8
+[SSO] 用戶存取 Download 頁面
+[SECURITY_C] 用戶 Frank Fu 傅士軒 (2508105) 發起問卷比對
+[SECURITY_C] 收到請求 payload keys: ['file_base64', 'client_name']
+[SECURITY_C] 客戶名稱: 未指定客戶
+[SECURITY_C] file_base64 長度 = 14216
+[SECURITY_C] 已儲存附件2暫存檔: /home/ifm02web/aiagent/security_c_uploads/survey_input_0ab3d6f1.xlsx
+[SECURITY_C] 準備開始比對
+[SECURITY_C]   - 問卷檔案: /home/ifm02web/aiagent/security_c_uploads/survey_input_0ab3d6f1.xlsx
+[SECURITY_C]   - 資料庫: /home/ifm02web/aiagent/附件三.xlsx
+
+================================================================================
+[問卷處理] 開始處理問卷
+================================================================================
+[LLM-first] ✅ 配置成功: https://en-openai01.openai.azure.com/gpt-5-chat
+
+[資料庫載入] 開始讀取: /home/ifm02web/aiagent/附件三.xlsx
+[資料庫載入] 工作表名稱: 彙整表
+[資料庫載入] 最大行數: 2009
+[資料庫載入] 成功載入 2008 筆資料
+[資料庫載入] 彙整版資料: 0 筆
+
+[問卷載入] 開始讀取: /home/ifm02web/aiagent/security_c_uploads/survey_input_0ab3d6f1.xlsx
+[問卷載入] 工作表名稱: Sheet1
+[問卷載入] 最大行數: 15
+
+[比對開始] 準備處理題目...
+[print-SK0][下面] clause index built=0
+[LLM-first] ⚠️  row=4 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 4] (7)不得雇用童工或安排未成年工進行危險作業...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (7)不得雇用童工或安排未成年工進行危險作業...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 10 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 88.0
+    - 行為準則: 工傷和職業病
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 88.0 ≥ 70，標記為綠色
+[LLM-first] ⚠️  row=5 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 5] (8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發行之證件，不得要求員工繳納保證金或任何其...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=6 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 6] (9)保證正常工作時間及加班應符合所有適用的法律法規...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (9)保證正常工作時間及加班應符合所有適用的法律法規...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=8 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 8] (11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=9 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 9] (12)不得在招募和雇用措施上進行種族、膚色、年齡、性別、性取向、民族、殘疾、懷孕、宗教、黨派、工會...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (12)不得在招募和雇用措施上進行種族、膚色、年齡、性別、性...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=10 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 10] (3)為員工提供健康、安全的工作環境，並在危險工作區及有害物質、危險商品上設置醒目標識...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (3)為員工提供健康、安全的工作環境，並在危險工作區及有害物...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 10 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 88.0
+    - 行為準則: 工傷和職業病
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 88.0 ≥ 70，標記為綠色
+[LLM-first] ⚠️  row=11 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 11] (4)定期評估健康、環境安全風險並制訂控制潛在或預期風險的相關措施...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (4)定期評估健康、環境安全風險並制訂控制潛在或預期風險的相...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=12 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 12] (2)向買方提交ISO14001證書或明確的環境治理方案...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (2)向買方提交ISO14001證書或明確的環境治理方案...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+127.0.0.1 - - [10/Feb/2026 14:47:24] "POST /api/security-c/match-from-base64 HTTP/1.1" 200 -
+ * Detected change in '/home/ifm02web/aiagent/rpa_security_c.py', reloading
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=13 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 13] (1)在商業活動中遵守所有適用的法令與商業道德，不得參與不正當競爭...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (1)在商業活動中遵守所有適用的法令與商業道德，不得參與不正...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+[LLM-first] ⚠️  row=14 萃取失敗: extract_question_schema_llm() missing 1 required positional argument: 'category'
+
+[題目 14] (13)不參與非法競爭和腐敗活動，並遵守智慧財產權法律...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: (13)不參與非法競爭和腐敗活動，並遵守智慧財產權法律...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: efac872c-1cf4-4025-b2d5-76cdd965cb9a
+  [RAG] 聚合後 0 個條文
+  ✗ RAG 未找到匹配結果
+
+[儲存完成] 輸出檔案: /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_144724.xlsx
+
+================================================================================
+[處理摘要]
+  總題數: 13
+  成功匹配: 5 (38.5%)
+  未匹配: 8
+  低信心題目: 8
+================================================================================
+[SECURITY_C] 比對完成, 輸出檔案路徑 = /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_144724.xlsx
+[SECURITY_C] 回傳結果檔案: security_c_result_20260210_144724.xlsx
+[SECURITY_C]   - 檔案大小: 7006 bytes
+[SECURITY_C]   - 總題數: 13
+[SECURITY_C]   - 成功匹配: 5
+[SECURITY_C]   - 低信心題目: 8
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/rpa_security_c.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/upload_attachment3_to_rag.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/rpa_security_c.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+ * Detected change in '/home/ifm02web/aiagent/attachment3-manager-sso/backend/main.py', reloading
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-439-479
+================================================================================
+職安問卷智慧彙整系統 - Flask API 伺服器啟動中（SSO 整合版）
+================================================================================
+服務網址: http://10.80.15.49:4204/
+上傳目錄: /home/ifm02web/aiagent/security_c_uploads
+資料庫路徑: /home/ifm02web/aiagent/附件三.xlsx
+資料庫存在: True
+SSO Realm: Infra
+SSO Client ID: MeetBook
+================================================================================
+✅ SSO 保護已啟用，所有路由需先登入 Keycloak
+================================================================================
+[SECURITY_C] 用戶 Frank Fu 傅士軒 (2508105) 發起問卷比對
+[SECURITY_C] 收到請求 payload keys: ['file_base64', 'client_name']
+[SECURITY_C] 客戶名稱: 未指定客戶
+[SECURITY_C] file_base64 長度 = 14216
+[SECURITY_C] 已儲存附件2暫存檔: /home/ifm02web/aiagent/security_c_uploads/survey_input_694f1058.xlsx
+[SECURITY_C] 準備開始比對
+[SECURITY_C]   - 問卷檔案: /home/ifm02web/aiagent/security_c_uploads/survey_input_694f1058.xlsx
+[SECURITY_C]   - 資料庫: /home/ifm02web/aiagent/附件三.xlsx
+
+================================================================================
+[問卷處理] 開始處理問卷
+================================================================================
+[LLM-first] ✅ 配置成功: https://en-openai01.openai.azure.com/gpt-5-chat
+
+[資料庫載入] 開始讀取: /home/ifm02web/aiagent/附件三.xlsx
+[資料庫載入] 工作表名稱: 彙整表
+[資料庫載入] 最大行數: 2009
+[資料庫載入] 成功載入 2008 筆資料
+[資料庫載入] 彙整版資料: 0 筆
+
+[問卷載入] 開始讀取: /home/ifm02web/aiagent/security_c_uploads/survey_input_694f1058.xlsx
+[問卷載入] 工作表名稱: Sheet1
+[問卷載入] 最大行數: 15
+
+[比對開始] 準備處理題目...
+[print-SK0][下面] clause index built=0
+
+[題目 4] (7)不得雇用童工或安排未成年工進行危險作業...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 禁止僱用童工及安排未成年工從事危險作業 童工 未成年工 危險...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 15 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 60.7
+    - 行為準則: 青年勞工/童工
+    - 匹配數量: 1
+  ~ 信心分數介於 55 與 70 之間（黃色區間）
+[LLM] 呼叫 Azure OpenAI 審查黃色配對是否可升級...
+[LLM] 回覆內容: Y
+[LLM] ✅ LLM 認為配對合理，升級成綠色
+  ✅ LLM 升級：黃色 → 綠色
+
+[題目 5] (8)不得苛求員工，不得要求員工繳交身份證、護照或其它政府發行之證件，不得要求員工繳納保證金或任何其...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 禁止苛待員工及收取證件或保證金作為雇用條件 身分證 護照 政...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 5 個條文
+    [0] score=0.586, 匹配數=1, 條文=對進入或離開公司的設施不得有不合理限制（包括工人宿舍或生活區），且不得對工人在設...
+    [1] score=0.580, 匹配數=1, 條文=僱主、勞務代理和其附屬機構不得持有或以其他方式銷毀、隱藏或沒收身份或移民檔，例如...
+    [2] score=0.579, 匹配數=1, 條文=對進入或離開公司的設施不得有不合理限制（包括工人宿舍或生活區），且不得對工人在設...
+  ✓ RAG 匹配成功 | 相似度分數: -1442.0
+    - 行為準則: 禁止強迫勞動
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (-1442.0 < 55)，標記為紅色待人工確認
+
+[題目 6] (9)保證正常工作時間及加班應符合所有適用的法律法規...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 確保工作時間與加班符合法律規範 正常工作時間 加班 法律法規...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 6 個條文
+    [0] score=0.627, 匹配數=1, 條文=每週工作時間不得超過 60 小時，包括加班時間，除非在緊急情況或異常情況下。所有...
+    [1] score=0.626, 匹配數=1, 條文=每週工作時間不得超過 60 小時，包括加班時間，除非在緊急情況或異常情況下。所有...
+    [2] score=0.612, 匹配數=1, 條文=貴公司是否有建立制度，確保員工每週工時不超過60小時（含加班）或法定上限，以較低...
+  ✓ RAG 匹配成功 | 相似度分數: 62.6
+    - 行為準則: 工時
+    - 匹配數量: 1
+  ~ 信心分數介於 55 與 70 之間（黃色區間）
+[LLM] 呼叫 Azure OpenAI 審查黃色配對是否可升級...
+[LLM] 回覆內容: Y
+[LLM] ✅ LLM 認為配對合理，升級成綠色
+  ✅ LLM 升級：黃色 → 綠色
+
+[題目 8] (11)賦予員工聚會結社的自由及提供員工與主管溝通的途徑...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 保障員工結社自由並建立與主管的溝通管道 結社自由 溝通途徑 ...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 6 個條文
+    [0] score=0.622, 匹配數=1, 條文=貴公司是否有政策確保員工依法享有結社自由、集體談判權及加入工會的權利？...
+    [1] score=0.616, 匹配數=1, 條文=結社自由
+符合當地法規下，應尊重所有工人組織和參加自己選擇的工會/工人代表組織、...
+    [2] score=0.545, 匹配數=1, 條文=員工及其代表可公開與管理階層溝通工作條件與管理做法，分享想法和擔憂，不受歧視、報...
+  ✓ RAG 匹配成功 | 相似度分數: 1061.6
+    - 行為準則: 自由結社
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 1061.6 ≥ 70，標記為綠色
+
+[題目 9] (12)不得在招募和雇用措施上進行種族、膚色、年齡、性別、性取向、民族、殘疾、懷孕、宗教、黨派、工會...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 禁止在招募與雇用中進行各類歧視 招募 雇用 歧視 #non_...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 6 個條文
+    [0] score=0.583, 匹配數=1, 條文=公司不得在招聘和就業作為（如工資、升遷、獎勵和培訓機會）中基於種族、膚色、年齡、...
+    [1] score=0.582, 匹配數=1, 條文=公司不得在招聘和就業作為（如工資、升遷、獎勵和培訓機會）中基於種族、膚色、年齡、...
+    [2] score=0.582, 匹配數=1, 條文=公司不得在招聘和就業作為（如工資、升遷、獎勵和培訓機會）中基於種族、膚色、年齡、...
+  ✓ RAG 匹配成功 | 相似度分數: 58.3
+    - 行為準則: 不歧視/不騷擾/
+人道待遇
+    - 匹配數量: 1
+  ~ 信心分數介於 55 與 70 之間（黃色區間）
+[LLM] 呼叫 Azure OpenAI 審查黃色配對是否可升級...
+[LLM] 回覆內容: Y
+[LLM] ✅ LLM 認為配對合理，升級成綠色
+  ✅ LLM 升級：黃色 → 綠色
+
+[題目 10] (3)為員工提供健康、安全的工作環境，並在危險工作區及有害物質、危險商品上設置醒目標識...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 提供健康安全的工作環境並在危險區域及有害物質設置醒目標識 健...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+127.0.0.1 - - [10/Feb/2026 15:25:29] "POST /api/security-c/match-from-base64 HTTP/1.1" 200 -
+ * Detected change in '/home/ifm02web/aiagent/rpa_security_c.py', reloading
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 16 個條文
+    [0] score=0.880, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [1] score=0.820, 匹配數=1, 條文=允許勞工有權在不被處罰的情況下，遠離即將面臨的危險，直到情況獲得緩解。...
+    [2] score=0.760, 匹配數=1, 條文=當無法有效控制危險時，則應提供工人適當的、維護良好的個人防護設備以及與這些危險相...
+  ✓ RAG 匹配成功 | 相似度分數: 76.0
+    - 行為準則: 有害物質
+    - 匹配數量: 1
+  ✅ 高信心題目，分數 76.0 ≥ 70，標記為綠色
+
+[題目 11] (4)定期評估健康、環境安全風險並制訂控制潛在或預期風險的相關措施...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 定期評估健康與環境安全風險並制定控制措施 健康 環境安全 風...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 6 個條文
+    [0] score=0.585, 匹配數=1, 條文=制定充分且有效的健康與安全管理績效考核和持續改進流程。...
+    [1] score=0.581, 匹配數=1, 條文=持續改善目標
+制定書面績效目標與計畫，持續改善社會、環境及職安衛績效，並定期評估...
+    [2] score=0.580, 匹配數=1, 條文=應鑑別及評估工人健康和安全的潛在危害風險（包含化學、電氣和其他能源來源、火災、車...
+  ✓ RAG 匹配成功 | 相似度分數: -1442.0
+    - 行為準則: 職業健康安全
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (-1442.0 < 55)，標記為紅色待人工確認
+
+[題目 12] (2)向買方提交ISO14001證書或明確的環境治理方案...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 提交ISO14001證書或環境治理方案給買方 ISO1400...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 6 個條文
+    [0] score=0.971, 匹配數=1, 條文=公司是否通過ISO 14001 或環境相關管理系統，且證書於有效期限內? 若是，...
+    [1] score=0.968, 匹配數=1, 條文=公司是否通過能源管理系統(ISO 50001)，且證書於有效期限內? 若是，請提...
+    [2] score=0.968, 匹配數=1, 條文=貴公司是否已建立環境管理系統？是否獲得ISO 14001等外部認證？（如有其他相...
+  ✓ RAG 匹配成功 | 相似度分數: -3402.9
+    - 行為準則: Environmental Management 環境管理
+    - 匹配數量: 1
+  ⚠️  信心分數低於低信心閾值 (-3402.9 < 55)，標記為紅色待人工確認
+
+[題目 13] (1)在商業活動中遵守所有適用的法令與商業道德，不得參與不正當競爭...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 遵守法令與商業道德，避免不正當競爭 法令 商業道德 不正當競...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 5 個條文
+    [0] score=0.622, 匹配數=1, 條文=貴公司是否已建立商業道德政策／反貪腐政策或類似文件，並有相關程序防範賄賂、便利支...
+    [1] score=0.619, 匹配數=1, 條文=貴公司是否已建立商業道德政策／反貪腐政策或類似文件，並有相關程序防範賄賂、便利支...
+    [2] score=0.617, 匹配數=1, 條文=公平競爭、廣告與商業
+必須維持公平競爭、行銷與商業標準，未透過攻擊、不道德方式進...
+  ✓ RAG 匹配成功 | 相似度分數: 60.9
+    - 行為準則: 商業誠信 / 誠信經營
+    - 匹配數量: 1
+  ~ 信心分數介於 55 與 70 之間（黃色區間）
+[LLM] 呼叫 Azure OpenAI 審查黃色配對是否可升級...
+[LLM] 回覆內容: Y
+[LLM] ✅ LLM 認為配對合理，升級成綠色
+  ✅ LLM 升級：黃色 → 綠色
+
+[題目 14] (13)不參與非法競爭和腐敗活動，並遵守智慧財產權法律...
+  [RAG] 呼叫語意搜尋 API (top_k=20)，題目: 避免非法競爭與貪腐並遵守智慧財產權法律 非法競爭 貪腐 智慧...
+  [PDF_ID] 動態查詢資料庫中的最新知識庫...
+  [PDF_ID] ✅ 找到最新知識庫: ae77d5ae-c385-4071-a936-ccaf91b34eb7
+  [RAG] 聚合後 4 個條文
+    [0] score=0.617, 匹配數=1, 條文=智慧財產權
+應尊重智慧財產權，技術與專業知識轉移須保護智慧財產權，並妥善保護客戶...
+    [1] score=0.613, 匹配數=1, 條文=智慧財產權
+應尊重智慧財產權，技術與專業知識轉移須保護智慧財產權，並妥善保護客戶...
+    [2] score=0.607, 匹配數=1, 條文=智慧財產權
+應尊重智慧財產權，技術與專業知識轉移須保護智慧財產權，並妥善保護客戶...
+  ✓ RAG 匹配成功 | 相似度分數: 61.7
+    - 行為準則: 智慧財產
+    - 匹配數量: 1
+  ~ 信心分數介於 55 與 70 之間（黃色區間）
+[LLM] 呼叫 Azure OpenAI 審查黃色配對是否可升級...
+[LLM] 回覆內容: N
+[LLM] ⚠️  LLM 認為配對有疑慮，保持黃色
+  ~ LLM 保持黃色（建議人工抽查）
+
+[儲存完成] 輸出檔案: /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_152529.xlsx
+
+================================================================================
+[處理摘要]
+  總題數: 13
+  成功匹配: 13 (100.0%)
+  未匹配: 0
+  低信心題目: 4
+================================================================================
+[SECURITY_C] 比對完成, 輸出檔案路徑 = /home/ifm02web/aiagent/security_c_uploads/security_c_result_20260210_152529.xlsx
+[SECURITY_C] 回傳結果檔案: security_c_result_20260210_152529.xlsx
+[SECURITY_C]   - 檔案大小: 8648 bytes
+[SECURITY_C]   - 總題數: 13
+[SECURITY_C]   - 成功匹配: 13
+[SECURITY_C]   - 低信心題目: 4
+ * Restarting with stat
+Traceback (most recent call last):
+  File "/home/ifm02web/aiagent/server.py", line 36, in <module>
+    from rpa_security_c import process_workbook
+  File "/home/ifm02web/aiagent/rpa_security_c.py", line 45
+    f.write(f'[{timestamp}] {message}
+            ^
+SyntaxError: unterminated string literal (detected at line 45)

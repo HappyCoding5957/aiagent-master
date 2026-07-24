@@ -1,0 +1,15 @@
+{"timestamp": "2026-03-03T12:20:41.971153", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_submit", "status": "queued", "details": "task_id=4a164a93dad24eb3b2485d77d2f5bf82"}
+{"timestamp": "2026-03-03T12:21:31.985397", "user": "2508105", "user_name": "未知", "action": "security_c_complete", "status": "success", "details": "題數=13"}
+{"timestamp": "2026-03-03T12:28:42.567436", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_submit", "status": "queued", "details": "task_id=2e30fca805544e8aa69bfdb999a1af7c"}
+{"timestamp": "2026-03-03T12:29:26.524032", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_error", "status": "failed", "details": "name 'user' is not defined"}
+{"timestamp": "2026-03-03T13:33:31.782871", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_submit", "status": "queued", "details": "task_id=6885fa705f264d5591613a5c10791513"}
+{"timestamp": "2026-03-03T13:34:17.108741", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_complete", "status": "success", "details": "題數=13"}
+{"timestamp": "2026-03-03T14:15:13.390454", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_submit", "status": "queued", "details": "task_id=3fb750a4abd142049baf1a452cb57122", "file_name": "未指定客戶", "chunks": 0}
+{"timestamp": "2026-03-03T14:16:02.742467", "user": "2508105", "user_name": "未知", "action": "security_c_complete", "status": "success", "details": "題數=14", "file_name": "未指定客戶", "chunks": 14}
+{"timestamp": "2026-03-03T14:19:30.906487", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_submit", "status": "queued", "details": "task_id=799bfae2f5b44b8dadda41f86a44549f", "file_name": "未指定客戶", "chunks": 0}
+{"timestamp": "2026-03-03T14:20:21.684549", "user": "2508105", "user_name": "未知", "action": "security_c_complete", "status": "success", "details": "題數=14", "file_name": "未指定客戶", "chunks": 14}
+{"timestamp": "2026-03-03T14:25:21.961114", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_submit", "status": "queued", "details": "task_id=4302af58f6f74c7d862cbf039b6ad148", "file_name": "未指定客戶", "chunks": 0}
+{"timestamp": "2026-03-03T14:26:11.060872", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_complete", "status": "success", "details": "題數=14", "file_name": "未指定客戶", "chunks": 14}
+{"timestamp": "2026-03-03T14:32:24.882853", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_submit", "status": "queued", "details": "task_id=6715a679e73e4f6a95c268e7ac415cea", "file_name": "測試.xlsx", "chunks": 0}
+{"timestamp": "2026-03-03T14:33:16.028277", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_complete", "status": "success", "details": "題數=13", "file_name": "測試.xlsx", "chunks": 13}
+{"timestamp": "2026-03-03T14:41:52.626445", "user": "2508105", "user_name": "Frank Fu 傅士軒", "action": "security_c_complete", "status": "success", "details": "題數=14", "file_name": "附件一. AI判斷測試結果_佳世達.xlsx", "chunks": 14}
