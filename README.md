@@ -21,7 +21,7 @@ Watch DocAgent automate a 10-question compliance checklist in real-time, scannin
 > [!IMPORTANT]
 > The source code is private due to commercial and intellectual property considerations. Technical discussions, architecture reviews, and live demonstrations are available upon request.
 > 
-> If you are interested in the technical implementation or an enterprise pilot, please feel free to contact us at **xi101888@gmail.com**.
+> If you are interested in the technical implementation or an enterprise pilot, please feel free to contact us at **happycodinglabs@gmail.com**.
 
 This repository contains the **Public Demo Assets** of the DocAgent platform, showing the frontend simulation layers, sample data generator, architecture, and deployment configurations.
 
@@ -123,5 +123,5 @@ To run the interactive browser simulation layer locally:
 HappyCoding Labs specializes in building custom Enterprise AI Agents, Document Intelligence pipelines, and Physical AI (Robotics / Computer Vision) solutions.
 
 - **Founder:** Frank Fu
-- **Email:** xi101888@gmail.com
+- **Email:** happycodinglabs@gmail.com
 - **LinkedIn Dynamic:** [HappyCoding Labs on LinkedIn](https://www.linkedin.com/posts/frank-fu-6b69a5411_docagent-enterprise-ai-agent-platform-share-7487181786436001792-NLnD/)
