@@ -166,3 +166,40 @@ I build automated "Response Intelligence Agents" that parse your reference polic
 - Multi-document validator agent (Claude/GPT reasoning framework).
 - Delivery: 14 Days
 ```
+
+---
+
+## 4. Arc.dev Profile Configuration
+
+Arc positions you more like a candidate profile than a gig listing — reviewers there respond to "how do you actually work," not just a tech-stack list. This section is new; it didn't exist in the earlier draft of this file.
+
+### Profile Title
+`Senior AI / Backend Engineer | LLM Apps, RAG, Automation`
+
+### How I Work / Bio
+```
+🚀 HOW I DELIVER PROJECTS (My Next-Gen AI Developer Workflow)
+
+I don't just write code — I run an AI-augmented delivery pipeline that pairs two different classes of AI dev tools with the right phase of the project, instead of using one tool for everything.
+
+1. Discovery & Architecture — Claude Code / Claude CLI
+   Before writing a line of implementation code, I point Claude CLI directly at the client's existing repo, API specs, or sample documents to map requirements, compare architectural options, and draft a technical proposal. Long-context reasoning is what makes this phase fast — it reads an entire codebase or spec set in minutes, not days.
+
+2. Rapid Prototyping — Replit Agent 3
+   For proof-of-concept builds — a working web app, a clickable dashboard, an end-to-end MVP a client can test — I use Replit Agent 3 to scaffold environment, backend, database, and frontend together, with automated in-browser testing. A "let's see if this works" conversation becomes a live demo within days.
+
+3. Hardening & Production Architecture — Claude Code
+   Once a prototype is validated, I move it off the rapid-prototyping environment and onto production infrastructure I control — Docker, Docker Compose, n8n, PostgreSQL/pgvector — using Claude Code to refactor auto-generated code, remove technical debt, write tests, and re-architect for security and scale.
+
+4. Documentation & Long-Term Iteration — Both
+   Claude handles technical documentation, API references, and audit trails. Replit stays available as a fast sandbox for testing new feature ideas before they're promoted into the production codebase.
+
+The result: clients get the speed of an AI-native "instant MVP" without inheriting the technical debt that usually comes with one — every prototype either graduates into a properly engineered system, or gets discarded before it costs you anything.
+
+Core stack: FastAPI, Next.js, PostgreSQL/pgvector, Docker, n8n, Claude/OpenAI/Gemini APIs, LangChain/LangGraph, PaddleOCR/Docling for document parsing.
+```
+
+### Skills to list
+AI/ML: LLM Applications, RAG, Prompt Engineering, AI Agents, LangChain, LangGraph
+Backend: Python, FastAPI, Node.js, PostgreSQL, REST API Design
+DevOps/Automation: Docker, Docker Compose, n8n, Linux, CLI Tooling

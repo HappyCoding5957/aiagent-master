@@ -29,38 +29,26 @@ This repository contains the **Public Demo Assets** of the DocAgent platform, sh
 
 ## 🏗️ System Architecture
 
-```
-                               +-----------------------------+
-                               |     Compliance Question     |
-                               +--------------+--------------+
-                                              |
-                                              v
-                               +--------------+--------------+
-                               |    DocAgent Planner Agent   |
-                               +--------------+--------------+
-                                              |
-                       +----------------------+----------------------+
-                       |                                             |
-                       v                                             v
-        +--------------+--------------+               +--------------+--------------+
-        |   Semantic Vector Search    |               |    Hybrid Keyword Match     |
-        |      (Database RAG)         |               |     (Local Fallback)        |
-        +--------------+--------------+               +--------------+--------------+
-                       |                                             |
-                       +----------------------+----------------------+
-                                              |
-                                              v
-                               +--------------+--------------+
-                               |   Multi-Document Validator  |
-                               |    (Claude / GPT Engine)    |
-                               +--------------+--------------+
-                                              |
-                                              v
-                       +----------------------+----------------------+
-                       |                      |                      |
-                       v                      v                      v
-                [Confidence Check]     [Visual Anchor]        [Verified Answer]
-                 Green / Yellow / Red    Auto-Scroll Grid      Export & Citations
+```mermaid
+graph TD
+    A[Compliance Question / Questionnaire File] --> B[DocAgent Planner Agent]
+    B --> C[Orchestrated Parallel Dispatcher]
+    C --> D[Semantic Vector Search <br> pgvector RAG]
+    C --> E[Hybrid Keyword Match <br> Local Offline Fallback]
+    D --> F[Multi-Document Validator Agent <br> Claude / GPT Reasoning]
+    E --> F
+    F --> G[Confidence & Evidence Scoring]
+    F --> H[Visual Anchor Selector]
+    F --> I[Verified Answer Generation]
+    G --> J[Confidence Tiers:<br>Approved 🟢 / Suggested 🟡 / Deficient 🔴]
+    H --> K[Precision Highlight Engine <br> Auto-Scroll UI]
+    I --> L[Export Report & Citation Log <br> Row-level Reference]
+    
+    style A fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    style B fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style F fill:#ede7f6,stroke:#4527a0,stroke-width:2px;
+    style D fill:#fff9c4,stroke:#fbc02d,stroke-width:1px;
+    style E fill:#ffe0b2,stroke:#f57c00,stroke-width:1px;
 ```
 
 ---
