@@ -11,24 +11,27 @@ This package is designed to position you as an **Enterprise AI Agent & Intellige
 
 ### Profile Overview (Bio)
 ```
-Are you losing hours copy-pasting data between client policy PDFs, scanned invoices, and complex questionnaire spreadsheets?
+Are you losing hours manually copy-pasting data between client policy PDFs, scanned invoices, and complex security/compliance questionnaires? 
 
-I build custom AI Agents and Intelligent Document Processing (IDP) pipelines that turn unstructured document chaos into structured, automated workflows.
+I build custom AI Agents and Intelligent Document Processing (IDP) pipelines that turn unstructured document chaos into structured, automated enterprise workflows.
 
-Over the past years, I have engineered production-grade RAG (Retrieval-Augmented Generation), local OCR, and agentic workflows for enterprise clients, achieving up to 97.5% reduction in manual document turnaround times.
+🎥 WATCH DOCAGENT IN ACTION (90-Second Demo):
+https://youtu.be/AXWbFVKlzkM (LinkedIn: https://lnkd.in/g6qzVPG9)
+
+Over the past years, I have engineered production-grade RAG (Retrieval-Augmented Generation), layout-aware OCR, and agentic planners for enterprise clients, achieving up to 97.5% reduction in manual document turnaround times.
 
 My Tech Stack:
 - Core AI/RAG: FastAPI, Next.js, pgvector, MeiliSearch, LlamaIndex/LangChain, LangGraph
-- Models: Gemini, OpenAI, Claude, Local ONNX Models (Embedding, NER, Spelling Correction)
+- Models: Claude, OpenAI, Gemini, Local ONNX Models (Embedding, NER, Spelling Correction)
 - Document Parsing: Docling, PaddleOCR, Layout-aware PDF engines
-- Automation: n8n, Make, Custom Python Daemons, REST APIs, Docker
+- Automation & DevOps: n8n, Make, Custom Python Daemons, REST APIs, Docker, Docker Compose
 
 Services I Offer:
 1. Enterprise AI Agent MVP: Rapid prototyping of document search, extraction, and synthesis agents (1-2 weeks).
-2. Intelligent RFP & Questionnaire Auto-Responder: Automatically match RFP questions or ESG forms against policy documents with citation traces.
-3. Private & On-Premise Deployments: Secure, containerized self-hosted RAG systems for regulated industries (Legal, Finance, Manufacturing).
+2. Intelligent RFP & Questionnaire Auto-Responder: Automatically match RFP questions, vCISO forms, or ESG checklists against policy documents with row-level citation traces.
+3. Private & On-Premise Deployments: Secure, containerized self-hosted RAG systems for regulated industries (Legal, Finance, Government, Manufacturing).
 
-Let's discuss how we can automate your high-volume document workflows. Click "Message" to start.
+Let's discuss how we can automate your high-volume document workflows. Click "Message" to schedule a brief call.
 ```
 
 ---
@@ -90,4 +93,76 @@ Let's align on your security requirements and design a deployment plan.
 
 Best,
 Frank Fu
+```
+
+---
+
+## 3. Fiverr Gig Configurations
+
+### Gig 1: "I will build a secure company knowledge base and AI chatbot"
+
+#### Gig Description
+```text
+Is your team losing hours searching for information across scattered policy PDFs, training manuals, and company wikis? 
+
+I will build a secure, high-precision AI Chatbot and Knowledge Base (RAG) system for your company. Unlike basic wrapper bots, this solution parses layout-aware documents, stores data securely in a vector database, and generates verified answers with row-level citation links back to the source files.
+
+Watch my 90-second product demo here: https://youtu.be/AXWbFVKlzkM
+
+---
+
+### PACKAGE TIERS
+
+#### 🟢 BASIC: "Standard FAQ Bot" - $450
+- 1 target data source (e.g., website or 1 PDF document).
+- Standard OpenAI/Gemini API integration.
+- Custom Web widget interface to embed on your site or intranet.
+- Delivery: 5 Days
+
+#### 🔵 STANDARD: "Enterprise Knowledge Base" - $1,200 (Most Popular)
+- Dynamic multi-document RAG (ingest up to 20 policy/manual PDFs).
+- Custom database configuration (PostgreSQL / pgvector / Redis cache).
+- Auto-scroll evidence visualizer (see matching text rows).
+- 3-tier confidence level scoring.
+- Delivery: 10 Days
+
+#### 🟣 PREMIUM: "Secure Self-Hosted Deployment" - $2,800
+- Full Docker & Docker Compose setup for local/on-premise servers or private cloud (AWS/Azure).
+- Complete layout-aware parsing pipeline (extract tables and diagrams accurately).
+- Local embedding and Chinese NLP spellcheck engines (completely private - no data leakage).
+- 2 hours of consulting & deployment walkthrough.
+- Delivery: 14 Days
+```
+
+### Gig 2: "I will automate your compliance & RFP questionnaire using AI Agents"
+
+#### Gig Description
+```text
+Drafting responses for security questionnaires (CAIQ, SIG, NIST, ISO 27001) or ESG supplier assessments is a tedious, human-prone process.
+
+I build automated "Response Intelligence Agents" that parse your reference policies, automatically scroll & scan spreadsheets, match clauses, and draft verified questionnaire answers in minutes.
+
+🎥 Watch how it works: https://youtu.be/AXWbFVKlzkM
+
+---
+
+### PACKAGE TIERS
+
+#### 🟢 BASIC: "Framework Auto-Responder Script" - $600
+- Command-line Python script that matches raw questions against a single policy sheet using local keyword metrics.
+- Output: Standard Excel file with matched columns.
+- Delivery: 7 Days
+
+#### 🔵 STANDARD: "Compliance Matching Dashboard" - $1,500
+- Full Web Console UI (split-screen layout: Question on the left, Excel viewer on the right).
+- Precision visual highlight anchors (the dashboard automatically scrolls to the exact matching clause).
+- Supports CAIQ, SIG, NIST, VSA, and ISO 27001.
+- Delivery: 10 Days
+
+#### 🟣 PREMIUM: "vCISO Enterprise Automation Suite" - $3,500
+- Full FastAPI backend + Next.js frontend containerized deployment.
+- Seamless n8n workflow integration for automated Slack/Email alert notifications.
+- High-availability hybrid search (automatic vector search with local keyword fallback).
+- Multi-document validator agent (Claude/GPT reasoning framework).
+- Delivery: 14 Days
 ```
