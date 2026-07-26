@@ -1,44 +1,40 @@
 1
-00:00:00,000 --> 00:00:06,470
-Are you tired of manually answering hundreds of complex security and compliance questions
+00:00:00,000 --> 00:00:04,800
+Manually answering security questionnaires is slow and painful.
 
 2
-00:00:07,470 --> 00:00:12,099
-by digging through dozens of policy documents and spreadsheets?
+00:00:05,800 --> 00:00:10,239
+Meet DocAgent, the AI-powered compliance engine.
 
 3
-00:00:13,299 --> 00:00:19,663
-Meet DocAgent: the next-generation enterprise multi-document intelligence engine.
+00:00:11,239 --> 00:00:15,019
+Watch how it automates the process in real-time.
 
 4
-00:00:20,863 --> 00:00:25,138
-Watch how the AI agent handles a security questionnaire.
-
-5
-00:00:25,138 --> 00:00:28,757
+00:00:15,019 --> 00:00:18,638
 First, it reads the input question.
 
-6
-00:00:29,757 --> 00:00:41,557
+5
+00:00:19,638 --> 00:00:31,438
 Then, it identifies the target reference file, opens the spreadsheet containing over one hundred policy rows, and automatically scrolls to scan the clauses.
 
-7
-00:00:46,130 --> 00:00:57,764
+6
+00:00:31,438 --> 00:00:43,072
 The robot locates the exact evidence row, highlighting the matched compliance clause in a precision blue box, and extracts the verified answer directly into our dashboard.
 
-8
-00:01:15,130 --> 00:01:25,234
+7
+00:00:55,000 --> 00:01:05,105
 Each question takes only seconds, automatically sorting answers into green, yellow, or red confidence tiers with verifiable citations.
 
-9
-00:01:32,130 --> 00:01:41,090
+8
+00:01:15,000 --> 00:01:23,960
 DocAgent supports secure, self-hosted containerized deployment, ensuring your company data never leaves your environment.
 
-10
-00:01:42,090 --> 00:01:48,139
+9
+00:01:24,960 --> 00:01:31,009
 Accelerate your RFP response and compliance audit cycles from weeks to minutes.
 
-11
-00:01:49,639 --> 00:01:54,268
+10
+00:01:32,509 --> 00:01:37,138
 Contact us today to schedule your custom enterprise pilot.
 
