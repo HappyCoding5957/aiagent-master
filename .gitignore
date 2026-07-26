@@ -8,3 +8,8 @@
 !docker-compose.demo.yml
 !docagent_clean_mvp/
 !docagent_clean_mvp/**
+
+# Ignore secrets and environment files
+**/.env
+**/.env.*
+**/secret*
