@@ -379,9 +379,10 @@ const questionnaire = [
     file: "CAIQ_SetA.xlsx",
     targetRow: 34,
     category: "Identity & Access Management",
-    behavior: "MFA Enforcement",
-    clause: "Multi-factor authentication (MFA) is enforced for all privileged and remote access accounts.",
+    controlId: "CAIQ-034",
+    clause: "Standard Identity & Access Management control mandates that multi-factor authentication (MFA) is enforced for all privileged and remote access accounts. [CAIQ-034]",
     dept: "IT Security",
+    evidenceStatus: "Compliant - evidence on file",
     status: "green",
     conf: 0.93,
     ans: "Yes. MFA is enforced on 100% of privileged and remote access accounts, verified by the identity provider's enforcement logs.",
@@ -393,9 +394,10 @@ const questionnaire = [
     file: "CAIQ_SetB.xlsx",
     targetRow: 61,
     category: "Encryption & Key Management",
-    behavior: "Encryption at Rest",
-    clause: "All data at rest is encrypted using AES-256, with key rotation performed every 90 days.",
+    controlId: "CAIQ-061",
+    clause: "Standard Encryption & Key Management control mandates that all data at rest is encrypted using AES-256, with key rotation performed every 90 days. [CAIQ-061]",
     dept: "IT Security",
+    evidenceStatus: "Compliant - last reviewed this cycle",
     status: "green",
     conf: 0.9,
     ans: "All data at rest is encrypted with AES-256. Key rotation runs automatically every 90 days, with rotation logs retained for audit.",
@@ -407,9 +409,10 @@ const questionnaire = [
     file: "SIG_SetA.xlsx",
     targetRow: 18,
     category: "Access Control",
-    behavior: "Access Recertification",
-    clause: "User access rights are reviewed and re-certified on a quarterly basis by data owners.",
+    controlId: "SIG-018",
+    clause: "Standard Access Control policy mandates that user access rights are reviewed and re-certified on a quarterly basis by data owners. [SIG-018]",
     dept: "IT Security",
+    evidenceStatus: "Compliant - evidence on file",
     status: "green",
     conf: 0.88,
     ans: "Access rights are re-certified quarterly by each data owner. The Q2 2026 review cycle has already been completed.",
@@ -421,9 +424,10 @@ const questionnaire = [
     file: "SIG_SetB.xlsx",
     targetRow: 77,
     category: "Business Continuity Management",
-    behavior: "BCP Failover Test",
-    clause: "A documented Business Continuity Plan is tested via full failover simulation at least once per year.",
+    controlId: "SIG-077",
+    clause: "Standard Business Continuity Management control mandates that a documented Business Continuity Plan is tested via full failover simulation at least once per year. [SIG-077]",
     dept: "IT Operations",
+    evidenceStatus: "In progress - remediation scheduled",
     status: "yellow",
     conf: 0.64,
     ans: "A documented BCP exists and is tested annually. This year's failover simulation is scheduled but not yet completed — flagged for review.",
@@ -435,9 +439,10 @@ const questionnaire = [
     file: "NIST_SetA.xlsx",
     targetRow: 9,
     category: "Protect",
-    behavior: "Endpoint Protection",
-    clause: "Endpoint devices are protected by centrally managed anti-malware with automatic signature updates.",
+    controlId: "NIST-009",
+    clause: "Standard Protect function control mandates that endpoint devices are protected by centrally managed anti-malware with automatic signature updates. [NIST-009]",
     dept: "IT Security",
+    evidenceStatus: "Compliant - last reviewed this cycle",
     status: "green",
     conf: 0.92,
     ans: "100% of managed endpoints run centrally administered EDR with automatic signature updates, confirmed by the latest coverage report.",
@@ -449,9 +454,10 @@ const questionnaire = [
     file: "NIST_SetB.xlsx",
     targetRow: 45,
     category: "Respond",
-    behavior: "Breach Notification SLA",
-    clause: "A formal Incident Response Plan defines roles, escalation paths, and a 24-hour notification requirement for confirmed breaches.",
+    controlId: "NIST-045",
+    clause: "Standard Respond function control mandates that a formal Incident Response Plan defines roles, escalation paths, and a 24-hour notification requirement for confirmed breaches. [NIST-045]",
     dept: "IT Security",
+    evidenceStatus: "Compliant - evidence on file",
     status: "green",
     conf: 0.87,
     ans: "Yes. The Incident Response Plan mandates notification within 24 hours of a confirmed breach, last tested this quarter via tabletop exercise.",
@@ -463,9 +469,10 @@ const questionnaire = [
     file: "VSA_SetA.xlsx",
     targetRow: 52,
     category: "Third-Party Risk",
-    behavior: "Subcontractor Due Diligence",
-    clause: "Subcontractors and fourth parties handling customer data are subject to the same security due-diligence review as direct vendors.",
+    controlId: "VSA-052",
+    clause: "Standard Third-Party Risk control mandates that subcontractors and fourth parties handling customer data are subject to the same security due-diligence review as direct vendors. [VSA-052]",
     dept: "Procurement",
+    evidenceStatus: "Compliant - evidence on file",
     status: "green",
     conf: 0.85,
     ans: "Yes. All subcontractors handling customer data undergo the same due-diligence review as direct vendors; the subcontractor register is current.",
@@ -477,9 +484,10 @@ const questionnaire = [
     file: "VSA_SetB.xlsx",
     targetRow: 23,
     category: "Vulnerability Management",
-    behavior: "Critical Vuln Remediation SLA",
-    clause: "Critical vulnerabilities identified by external scanning are remediated within 15 days of disclosure.",
+    controlId: "VSA-023",
+    clause: "Standard Vulnerability Management control mandates that critical vulnerabilities identified by external scanning are remediated within 15 days of disclosure. [VSA-023]",
     dept: "IT Security",
+    evidenceStatus: "Pending - awaiting evidence upload",
     status: "yellow",
     conf: 0.55,
     ans: "Policy requires remediation within 15 days. Currently 2 of 3 open critical findings are within SLA — one item is at risk and flagged for follow-up.",
@@ -491,9 +499,10 @@ const questionnaire = [
     file: "ISO27001_SetA.xlsx",
     targetRow: 88,
     category: "Technological Controls",
-    behavior: "Network Segmentation",
-    clause: "Network segmentation isolates production, staging, and corporate environments with documented firewall rulesets.",
+    controlId: "ISO27001-088",
+    clause: "Standard Technological Controls policy mandates that network segmentation isolates production, staging, and corporate environments with documented firewall rulesets. [ISO27001-088]",
     dept: "IT Operations",
+    evidenceStatus: "Compliant - last reviewed this cycle",
     status: "green",
     conf: 0.9,
     ans: "Yes. Production, staging, and corporate networks are fully segmented with documented firewall rulesets, last audited this quarter.",
@@ -505,9 +514,10 @@ const questionnaire = [
     file: "ISO27001_SetB.xlsx",
     targetRow: 5,
     category: "Organizational Controls",
-    behavior: "Policy Approval & Review",
-    clause: "An information security policy is approved by senior management and reviewed at least annually.",
+    controlId: "ISO27001-005",
+    clause: "Standard Organizational Controls policy mandates that an information security policy is approved by senior management and reviewed at least annually. [ISO27001-005]",
     dept: "IT Security",
+    evidenceStatus: "Compliant - evidence on file",
     status: "green",
     conf: 0.95,
     ans: "Yes. Policy version 3.2 is approved by the CISO and reviewed on an annual cycle, with the next review due in Q1 2027.",
@@ -587,7 +597,7 @@ questionnaire.forEach(item => {
 // killed the ENTIRE script block (including the setTimeout that starts the
 // animation loop at the bottom of this file). That single line is why the page
 // rendered but never moved. Fixed below with String(r).padStart(3, "0").
-function loadExcelData(activeFile, targetRow, targetDomain, targetControlLabel, targetClause, targetOwner) {
+function loadExcelData(activeFile, targetRow, targetDomain, targetControlId, targetClause, targetOwner, targetEvidenceStatus) {
   tbodyEl.innerHTML = "";
 
   const frameworkPrefix = activeFile.split("_")[0]; // e.g. "CAIQ", "SIG", "NIST", "VSA", "ISO27001"
@@ -607,13 +617,17 @@ function loadExcelData(activeFile, targetRow, targetDomain, targetControlLabel, 
     let owner = fakeOwners[r % fakeOwners.length];
     let status = fakeStatuses[r % fakeStatuses.length];
 
-    // Inject the real target match data at targetRow
+    // Inject the real target match data at targetRow — same field format as the
+    // filler rows (Control ID pattern, bracketed clause suffix, shared status
+    // vocabulary) so the correct row is indistinguishable from the other 99
+    // until the retrieval step actually matches it. Only the content should
+    // give it away, never the formatting.
     if (r === targetRow) {
       domain = targetDomain;
-      controlLabel = targetControlLabel;
+      controlLabel = targetControlId;
       clause = targetClause;
       owner = targetOwner;
-      status = "Compliant - evidence on file (verified this cycle)";
+      status = targetEvidenceStatus;
     }
 
     tr.innerHTML = `
@@ -672,7 +686,7 @@ function runSimulationStep() {
   badgeEl.style.color = "#f0f6fc";
 
   // Load 100 rows matching active file
-  loadExcelData(qData.file, qData.targetRow, qData.category, qData.behavior, qData.clause, qData.dept);
+  loadExcelData(qData.file, qData.targetRow, qData.category, qData.controlId, qData.clause, qData.dept, qData.evidenceStatus);
 
   // Reset scroll
   scrollBoxEl.scrollTop = 0;

@@ -59,37 +59,45 @@ def make_filler_row(idx: int, framework: str) -> list:
 
 # 每個檔案指定一列「真正會被 demo 命中的答案列」，其餘 99 列用 filler 產生
 # (framework, set_label, target_row, domain, control_id, clause, owner, status)
+# 注意 (Consistency Note)：clause 統一用「Standard {Domain} control mandates that ...
+# [control_id]」開頭+結尾的句式，跟 filler rows 的「Standard {domain} {verb}
+# procedure is documented and reviewed on a recurring cycle. [control_id]」共用
+# 同一個開頭字詞 "Standard"——這是第二輪修正：第一輪只統一了 Control ID 格式跟
+# 後綴，但句子開頭沒統一（target 是 "Multi-factor authentication is..."，filler
+# 是 "Standard XXX..."），使用者一眼掃過 Clause Description 欄位還是能靠「這句
+# 沒有用 Standard 開頭」認出答案列。現在句首、句尾格式都跟 filler 同源，只有
+# 中段的實際內容不同——這才是真正只靠「語意檢索」而非「格式」才能定位到答案。
 TARGET_SPECS = [
     ("CAIQ", "SetA", 34, "Identity & Access Management", "CAIQ-034",
-     "Multi-factor authentication (MFA) is enforced for all privileged and remote access accounts.",
-     "IT Security", "Compliant - evidence on file (MFA enforcement logs)"),
+     "Standard Identity & Access Management control mandates that multi-factor authentication (MFA) is enforced for all privileged and remote access accounts. [CAIQ-034]",
+     "IT Security", "Compliant - evidence on file"),
     ("CAIQ", "SetB", 61, "Encryption & Key Management", "CAIQ-061",
-     "All data at rest is encrypted using AES-256, with key rotation performed every 90 days.",
-     "IT Security", "Compliant - key rotation logs attached"),
+     "Standard Encryption & Key Management control mandates that all data at rest is encrypted using AES-256, with key rotation performed every 90 days. [CAIQ-061]",
+     "IT Security", "Compliant - last reviewed this cycle"),
     ("SIG", "SetA", 18, "Access Control", "SIG-018",
-     "User access rights are reviewed and re-certified on a quarterly basis by data owners.",
-     "IT Security", "Compliant - Q2 2026 access review completed"),
+     "Standard Access Control policy mandates that user access rights are reviewed and re-certified on a quarterly basis by data owners. [SIG-018]",
+     "IT Security", "Compliant - evidence on file"),
     ("SIG", "SetB", 77, "Business Continuity Management", "SIG-077",
-     "A documented Business Continuity Plan is tested via full failover simulation at least once per year.",
-     "IT Operations", "Compliant - annual failover test passed"),
+     "Standard Business Continuity Management control mandates that a documented Business Continuity Plan is tested via full failover simulation at least once per year. [SIG-077]",
+     "IT Operations", "In progress - remediation scheduled"),
     ("NIST", "SetA", 9, "Protect", "NIST-009",
-     "Endpoint devices are protected by centrally managed anti-malware with automatic signature updates.",
-     "IT Security", "Compliant - EDR coverage 100% of managed endpoints"),
+     "Standard Protect function control mandates that endpoint devices are protected by centrally managed anti-malware with automatic signature updates. [NIST-009]",
+     "IT Security", "Compliant - last reviewed this cycle"),
     ("NIST", "SetB", 45, "Respond", "NIST-045",
-     "A formal Incident Response Plan defines roles, escalation paths, and a 24-hour notification requirement for confirmed breaches.",
-     "IT Security", "Compliant - IR plan last tested this quarter"),
+     "Standard Respond function control mandates that a formal Incident Response Plan defines roles, escalation paths, and a 24-hour notification requirement for confirmed breaches. [NIST-045]",
+     "IT Security", "Compliant - evidence on file"),
     ("VSA", "SetA", 52, "Third-Party Risk", "VSA-052",
-     "Subcontractors and fourth parties handling customer data are subject to the same security due-diligence review as direct vendors.",
-     "Procurement", "Compliant - subcontractor register up to date"),
+     "Standard Third-Party Risk control mandates that subcontractors and fourth parties handling customer data are subject to the same security due-diligence review as direct vendors. [VSA-052]",
+     "Procurement", "Compliant - evidence on file"),
     ("VSA", "SetB", 23, "Vulnerability Management", "VSA-023",
-     "Critical vulnerabilities identified by external scanning are remediated within 15 days of disclosure.",
-     "IT Security", "In progress - 2 of 3 open items within SLA"),
+     "Standard Vulnerability Management control mandates that critical vulnerabilities identified by external scanning are remediated within 15 days of disclosure. [VSA-023]",
+     "IT Security", "Pending - awaiting evidence upload"),
     ("ISO27001", "SetA", 88, "Technological Controls", "ISO27001-088",
-     "Network segmentation isolates production, staging, and corporate environments with documented firewall rulesets.",
-     "IT Operations", "Compliant - last firewall audit this quarter"),
+     "Standard Technological Controls policy mandates that network segmentation isolates production, staging, and corporate environments with documented firewall rulesets. [ISO27001-088]",
+     "IT Operations", "Compliant - last reviewed this cycle"),
     ("ISO27001", "SetB", 5, "Organizational Controls", "ISO27001-005",
-     "An information security policy is approved by senior management and reviewed at least annually.",
-     "IT Security", "Compliant - policy v3.2 approved by CISO"),
+     "Standard Organizational Controls policy mandates that an information security policy is approved by senior management and reviewed at least annually. [ISO27001-005]",
+     "IT Security", "Compliant - evidence on file"),
 ]
 
 
