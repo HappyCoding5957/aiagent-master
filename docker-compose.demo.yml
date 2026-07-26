@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  docagent-ui:
+    image: happycodinglabs/docagent-ui:latest
+    container_name: docagent-frontend
+    ports:
+      - "8000:8000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5555
+      - DEMO_MODE=true
+    restart: unless-stopped
+
+  docagent-agent-backend:
+    image: happycodinglabs/docagent-backend:latest
+    container_name: docagent-backend
+    ports:
+      - "5555:5555"
+    environment:
+      - DATABASE_URL=postgresql://postgres:secretpassword@db:5432/docagent
+      - LLM_PROVIDER=openai
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - EMBEDDING_MODEL=text-embedding-3-small
+      - CACHE_REDIS_URL=redis://redis:6379/0
+      - OFFLINE_FALLBACK=true
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: docagent-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secretpassword
+      - POSTGRES_DB=docagent
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: docagent-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+    driver: local
